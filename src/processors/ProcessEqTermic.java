@@ -159,5 +159,4 @@ public class ProcessEqTermic {
         
     }
     
-    private String val;
 }

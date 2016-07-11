@@ -1,10 +1,10 @@
 
 package entidades;
 
-public class ItensQc {
+public class ItensQuantidadeCalor {
     
     private Integer id;
-    private Double tFinal, tInicial,massa,capTermic;
+    private Double tempFinal, tempInicial,massa,capTermic;
 
     public Double getCapTermic() {
         return capTermic;
@@ -23,7 +23,7 @@ public class ItensQc {
         this.elemento = elemento;
     }
 
-    public ItensQc() {
+    public ItensQuantidadeCalor() {
     }
 
     public Integer getId() {
@@ -34,20 +34,20 @@ public class ItensQc {
         this.id = id;
     }
 
-    public Double gettFinal() {
-        return tFinal;
+    public Double getTempFinal() {
+        return tempFinal;
     }
 
-    public void settFinal(Double tFinal) {
-        this.tFinal = tFinal;
+    public void setTempFinal(Double tempFinal) {
+        this.tempFinal = tempFinal;
     }
 
-    public Double gettInicial() {
-        return tInicial;
+    public Double getTempInicial() {
+        return tempInicial;
     }
 
-    public void settInicial(Double tInicial) {
-        this.tInicial = tInicial;
+    public void setTempInicial(Double tempInicial) {
+        this.tempInicial = tempInicial;
     }
 
     public Double getMassa() {

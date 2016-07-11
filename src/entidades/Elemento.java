@@ -6,22 +6,22 @@ public class Elemento {
     
     private Integer id;
     private String nome;
-    private Double cSolido, cLiquido, cGasoso,lFusao,lVapor,tF,tV;
+    private Double cSolido, cLiquido, cGasoso,lFusao,lVapor,tempF,tempV;
 
-    public Double gettF() {
-        return tF;
+    public Double getTempF() {
+        return tempF;
     }
 
-    public void settF(Double tF) {
-        this.tF = tF;
+    public void setTempF(Double tempF) {
+        this.tempF = tempF;
     }
 
-    public Double gettV() {
-        return tV;
+    public Double getTempV() {
+        return tempV;
     }
 
-    public void settV(Double tV) {
-        this.tV = tV;
+    public void setTempV(Double tempV) {
+        this.tempV = tempV;
     }
 
     public Elemento() {

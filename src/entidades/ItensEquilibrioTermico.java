@@ -1,7 +1,7 @@
 
 package entidades;
 
-public class ItensEt {
+public class ItensEquilibrioTermico {
     
     private Integer id;
     private Double tempIni,massa,capTermic;

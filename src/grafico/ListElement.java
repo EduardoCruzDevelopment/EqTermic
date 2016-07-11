@@ -236,8 +236,8 @@ public void amont(String tipo){
                 e.getcGasoso(),
                 e.getlFusao(),
                 e.getlVapor(),
-                e.gettF(),
-                e.gettV()
+                e.getTempF(),
+                e.getTempV()
             });
         }
         

@@ -1,6 +1,6 @@
 package processors;
 
-import entidades.ItensEt;
+import entidades.ItensEquilibrioTermico;
 import java.math.BigDecimal;
 import java.util.List;
 
@@ -62,11 +62,11 @@ public class ProcessEqTermic {
 
     }
     
-    private BigDecimal qtEnergToChangeFase(ItensEt ie) throws Exception{
+    private BigDecimal qtEnergToChangeFase(ItensEquilibrioTermico ie) throws Exception{
         
         System.out.println("Analisando quantidade de energia necessaria para mudar para a fase mais proxima.\n");
         
-        String p = position(ie.getTempIni(),ie.getElemento().gettF(),ie.getElemento().gettV());
+        String p = position(ie.getTempIni(),ie.getElemento().getTempF(),ie.getElemento().getTempV());
         
         System.out.println("Posição: "+p);
         
@@ -81,7 +81,7 @@ public class ProcessEqTermic {
         
         if(p.equals("antF")){
             
-            BigDecimal dt = new BigDecimal(ie.getElemento().gettF()-ie.getTempIni());
+            BigDecimal dt = new BigDecimal(ie.getElemento().getTempF()-ie.getTempIni());
             return (m.multiply(cs.multiply(dt)));//.add(clf.multiply(m));
             
         }else if(p.equals("onF")){
@@ -92,7 +92,7 @@ public class ProcessEqTermic {
             
             System.out.println("Analise por média");
             
-            Double med = (ie.getElemento().gettF()+ie.getElemento().gettV())/2;
+            Double med = (ie.getElemento().getTempF()+ie.getElemento().getTempV())/2;
             
             System.out.println("Média: "+med);
             System.out.println("Temperatura inicial relacionada a média:");
@@ -100,20 +100,20 @@ public class ProcessEqTermic {
             if(ie.getTempIni() < med){
                 System.out.println("Menor");
                 
-                BigDecimal dt = new BigDecimal(ie.getElemento().gettF()-ie.getTempIni());
+                BigDecimal dt = new BigDecimal(ie.getElemento().getTempF()-ie.getTempIni());
                 return (m.multiply(cl.multiply(dt)));//.add(m.multiply(clfn)); 
                 
             }else if(ie.getTempIni().equals(med)){
                 
                 System.out.println("Igual");
                 
-                BigDecimal dt = new BigDecimal(ie.getElemento().gettF()-ie.getTempIni()); 
+                BigDecimal dt = new BigDecimal(ie.getElemento().getTempF()-ie.getTempIni()); 
                 return (m.multiply(cl.multiply(dt)));//.add(m.multiply(clvn));
                 
             }else if(ie.getTempIni() > med){
                 System.out.println("Maior");
                 
-                BigDecimal dt = new BigDecimal(ie.getElemento().gettV()-ie.getTempIni());
+                BigDecimal dt = new BigDecimal(ie.getElemento().getTempV()-ie.getTempIni());
                 return (m.multiply(cl.multiply(dt)));//.add(m.multiply(clv));
                 
             }else{
@@ -127,7 +127,7 @@ public class ProcessEqTermic {
             
         }else if(p.equals("postV")){
             
-            BigDecimal dt = new BigDecimal(ie.getElemento().gettV()-ie.getTempIni());
+            BigDecimal dt = new BigDecimal(ie.getElemento().getTempV()-ie.getTempIni());
             
             return (m.multiply(cg.multiply(dt)));//.add(m.multiply(clvn));
             
@@ -137,15 +137,15 @@ public class ProcessEqTermic {
         
     }
     
-    public void metodosemnome(List<ItensEt> corpo){
+    public void metodosemnome(List<ItensEquilibrioTermico> corpo){
         
-        for (ItensEt ie : corpo){
+        for (ItensEquilibrioTermico ie : corpo){
             
             System.out.println("Corpo Referente: "+ie.getElemento().getNome()+"/n");
             
             BigDecimal ced = new BigDecimal(0);
             
-            for (ItensEt iec : corpo){
+            for (ItensEquilibrioTermico iec : corpo){
                 
                 if(ie!=iec){
     

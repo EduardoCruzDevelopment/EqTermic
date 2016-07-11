@@ -374,21 +374,21 @@ public class CadElement extends javax.swing.JDialog {
                 Double fusv = Math.pow(10,Integer.parseInt(txtTempFPow.getText())) * Double.parseDouble(txtTempF.getText());
                 
                 if(vap.equals("°C")){
-                    e.settV(vapv);
+                    e.setTempV(vapv);
                 }else{
                     Conversores c = new Conversores();
                     System.out.println("Campo TempVap --- converção de "+vap+" para °C.");
                     System.out.println(c.temperatura(vap, "°C", vapv));
-                    e.settV(c.temperatura(vap, "°C", vapv));
+                    e.setTempV(c.temperatura(vap, "°C", vapv));
                 }
                 
                 if(fus.equals("°C")){
-                    e.settF(fusv);
+                    e.setTempF(fusv);
                 }else{
                     Conversores c = new Conversores();
                     System.out.println("Campo TempFus --- converção de "+fus+" para °C.");
                     System.out.println(c.temperatura(fus, "°C", fusv));
-                    e.settF(c.temperatura(fus, "°C", fusv));
+                    e.setTempF(c.temperatura(fus, "°C", fusv));
                 }
 
                 System.out.println("Valores convertidos corretamente");

@@ -2,8 +2,8 @@
 package grafico;
 
 import entidades.Elemento;
-import entidades.ItensEt;
-import entidades.ItensQc;
+import entidades.ItensEquilibrioTermico;
+import entidades.ItensQuantidadeCalor;
 import grafico.conversores.ConverEnerg;
 import grafico.conversores.ConverMassa;
 import grafico.conversores.ConverTemp;
@@ -22,12 +22,12 @@ public class MainTela extends javax.swing.JFrame {
     public static Integer precisao = 1000;
     
     //qc - ini
-    private List<ItensQc> qcLista = new ArrayList();
+    private List<ItensQuantidadeCalor> qcLista = new ArrayList();
     private Elemento qcE;
     //qc - end
     
     //et - ini
-    private List<ItensEt> etLista = new ArrayList();
+    private List<ItensEquilibrioTermico> etLista = new ArrayList();
     private Elemento etE;
     //et - end
     
@@ -707,7 +707,7 @@ public class MainTela extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, "Preencha todos os campos!","InternalSystem",JOptionPane.ERROR_MESSAGE);
         }else{
             try{
-                ItensQc ie = new ItensQc();
+                ItensQuantidadeCalor ie = new ItensQuantidadeCalor();
                 ie.setElemento(qcE);
 
                 String combMassa = (String) qcCombMassa.getSelectedItem();
@@ -736,16 +736,16 @@ public class MainTela extends javax.swing.JFrame {
 
                 if(combTempIni.equals("°C")){
                     System.out.println(Math.pow(10,Integer.parseInt(qcTxtTempIniPow.getText())) * Double.parseDouble(qcTxtTempIni.getText()));
-                    ie.settInicial(Math.pow(10,Integer.parseInt(qcTxtTempIniPow.getText())) * Double.parseDouble(qcTxtTempIni.getText()));
+                    ie.setTempInicial(Math.pow(10,Integer.parseInt(qcTxtTempIniPow.getText())) * Double.parseDouble(qcTxtTempIni.getText()));
                 }else{
-                    ie.settInicial(c.temperatura(combTempIni, "°C",
+                    ie.setTempInicial(c.temperatura(combTempIni, "°C",
                         Math.pow(10,Integer.parseInt(qcTxtTempIniPow.getText())) * Double.parseDouble(qcTxtTempIni.getText())));
                 }
 
                 if(combTempFin.equals("°C")){
-                    ie.settFinal(Math.pow(10,Integer.parseInt(qcTxtTempFinPow.getText())) * Double.parseDouble(qcTxtTempFin.getText()));
+                    ie.setTempFinal(Math.pow(10,Integer.parseInt(qcTxtTempFinPow.getText())) * Double.parseDouble(qcTxtTempFin.getText()));
                 }else{
-                    ie.settFinal(c.temperatura(combTempFin, "°C",
+                    ie.setTempFinal(c.temperatura(combTempFin, "°C",
                     Math.pow(10,Integer.parseInt(qcTxtTempFinPow.getText())) * Double.parseDouble(qcTxtTempFin.getText())));
                 }
 
@@ -811,12 +811,12 @@ public class MainTela extends javax.swing.JFrame {
             modelo.addColumn("Temperatura Final (°C)");
             modelo.addColumn("Massa (g)");
     
-            for (ItensQc ie : qcLista) {
+            for (ItensQuantidadeCalor ie : qcLista) {
             
                 modelo.addRow(new Object[]{
                     ie.getElemento().getNome(),
-                    ie.gettInicial(),
-                    ie.gettFinal(),
+                    ie.getTempInicial(),
+                    ie.getTempFinal(),
                     ie.getMassa()
                 });
         
@@ -918,7 +918,7 @@ public class MainTela extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, "Preencha todos os campos!","InternalSystem",JOptionPane.ERROR_MESSAGE);
         }else{
             try{
-                ItensEt iet = new ItensEt();
+                ItensEquilibrioTermico iet = new ItensEquilibrioTermico();
                 iet.setElemento(etE);
 
                 String combMassa = (String) etCombMassa.getSelectedItem();
@@ -1025,7 +1025,7 @@ public class MainTela extends javax.swing.JFrame {
             modelo.addColumn("Temperatura Incial (°C)");
             modelo.addColumn("Massa (g)");
 
-            for (ItensEt iet : etLista) {
+            for (ItensEquilibrioTermico iet : etLista) {
             
                 modelo.addRow(new Object[]{
                     iet.getElemento().getNome(),

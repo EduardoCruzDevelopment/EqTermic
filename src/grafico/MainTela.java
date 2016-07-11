@@ -15,7 +15,7 @@ import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import util.Conversores;
 import util.JtextFieldNumbers;
-import processors.ProcessQtCalor;
+import processors.ProcessQuantidadeCalor;
 
 public class MainTela extends javax.swing.JFrame {
     
@@ -768,7 +768,7 @@ public class MainTela extends javax.swing.JFrame {
 
             try{
 
-                ProcessQtCalor p = new ProcessQtCalor();
+                ProcessQuantidadeCalor p = new ProcessQuantidadeCalor();
                 ShowResult sr = new ShowResult(null, true,"qc",p.calc(qcLista));
                 sr.setLocationRelativeTo(null);
                 sr.setVisible(true);

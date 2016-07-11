@@ -4,7 +4,7 @@ import entidades.ItensEquilibrioTermico;
 import java.math.BigDecimal;
 import java.util.List;
 
-public class ProcessEqTermic {
+public class ProcessEquilibrioTermico {
     
     public Integer precision;
     

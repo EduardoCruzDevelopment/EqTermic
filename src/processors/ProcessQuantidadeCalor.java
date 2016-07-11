@@ -6,7 +6,7 @@ import java.math.BigDecimal;
 import java.util.List;
 import javax.swing.JOptionPane;
 
-public class ProcessQtCalor {
+public class ProcessQuantidadeCalor {
 
     public BigDecimal calc(List<ItensQuantidadeCalor> corpo) throws Exception {
 

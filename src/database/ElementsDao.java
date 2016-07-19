@@ -22,7 +22,7 @@ public class ElementsDao {
 
       Statement stm = con.createStatement();
       
-      stm.executeUpdate("insert into APP.elements (nome,cSolido,cLiquido,cGasoso,lFusao,lVapor,tempF,tempV) values("+"'"+e.getNome()+"',"+e.getcSolido()+","
+      stm.executeUpdate("insert into APP.elements (nome,cSolido,cLiquido,cGasoso,lFusao,lVapor,tF,tV) values("+"'"+e.getNome()+"',"+e.getcSolido()+","
                         +e.getcLiquido()+","+e.getcGasoso()+","+e.getlFusao()+","+e.getlVapor()+","+e.getTempF()+","+e.getTempV()+")");
       
     }
@@ -45,8 +45,8 @@ public class ElementsDao {
           e.setcGasoso(rs.getDouble("cGasoso"));
           e.setlFusao(rs.getDouble("lFusao"));
           e.setlVapor(rs.getDouble("lVapor"));
-          e.setTempF(rs.getDouble("tempF"));
-          e.setTempV(rs.getDouble("tempV"));
+          e.setTempF(rs.getDouble("tF"));
+          e.setTempV(rs.getDouble("tV"));
           lista.add(e);
       }
       
@@ -70,8 +70,8 @@ public class ElementsDao {
           e.setcGasoso(rs.getDouble("cGasoso"));
           e.setlFusao(rs.getDouble("lFusao"));
           e.setlVapor(rs.getDouble("lVapor"));
-          e.setTempF(rs.getDouble("tempF"));
-          e.setTempV(rs.getDouble("tempV"));
+          e.setTempF(rs.getDouble("tF"));
+          e.setTempV(rs.getDouble("tV"));
           lista.add(e);
       }
       

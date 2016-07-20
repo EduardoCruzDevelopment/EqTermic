@@ -14,7 +14,7 @@ public class PesqElement extends javax.swing.JDialog {
 
    public List<Elemento> lista = new ArrayList();
    private Elemento e;
-
+   
     public Elemento getE() {
         return e;
     }
@@ -197,8 +197,12 @@ public void amont(String tipo){
         JOptionPane.showMessageDialog(null, "Erro de busca!","InternalSystem",JOptionPane.ERROR_MESSAGE);
     }
     
-    DefaultTableModel modelo = new DefaultTableModel();
-        
+    DefaultTableModel modelo = new DefaultTableModel(){  
+            public boolean isCellEditable(int rowIndex, int mColIndex) {  
+                return false;  
+            }  
+        };
+    
     modelo.addColumn("Nome");
     modelo.addColumn("Calor específico estado Solido (cal/g°C)");
     modelo.addColumn("Calor específico estado Liquido (cal/g°C)");
@@ -220,6 +224,8 @@ public void amont(String tipo){
                 e.getTempV()
             });
         }
+    
+        
         
     table.setModel(modelo);
 

@@ -804,7 +804,11 @@ public class MainTela extends javax.swing.JFrame {
     private void qcAmont(){
         try{
     
-            DefaultTableModel modelo = new DefaultTableModel();
+            DefaultTableModel modelo = new DefaultTableModel(){  
+                public boolean isCellEditable(int rowIndex, int mColIndex) {  
+                    return false;  
+                }  
+            };
         
             modelo.addColumn("Nome");
             modelo.addColumn("Temperatura Incial (°C)");
@@ -1019,7 +1023,11 @@ public class MainTela extends javax.swing.JFrame {
         
         try{
     
-            DefaultTableModel modelo = new DefaultTableModel();
+            DefaultTableModel modelo = new DefaultTableModel(){  
+                public boolean isCellEditable(int rowIndex, int mColIndex) {  
+                    return false;  
+                }  
+            };
         
             modelo.addColumn("Nome");
             modelo.addColumn("Temperatura Incial (°C)");

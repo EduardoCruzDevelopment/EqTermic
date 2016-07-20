@@ -217,7 +217,12 @@ public void amont(String tipo){
         JOptionPane.showMessageDialog(null, "Erro de busca!","InternalSystem",JOptionPane.ERROR_MESSAGE);
     }
     
-    DefaultTableModel modelo = new DefaultTableModel();
+    
+    DefaultTableModel modelo = new DefaultTableModel(){  
+        public boolean isCellEditable(int rowIndex, int mColIndex) {  
+            return false;  
+        }  
+    };
         
     modelo.addColumn("Nome");
     modelo.addColumn("Calor específico estado Solido (cal/g°C)");

@@ -54,6 +54,11 @@ public class PesqElement extends javax.swing.JDialog {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
+        table.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tableMouseClicked(evt);
+            }
+        });
         table.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 tableKeyPressed(evt);
@@ -127,6 +132,16 @@ public class PesqElement extends javax.swing.JDialog {
     private void txtTermoKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtTermoKeyPressed
         amont("termo");
     }//GEN-LAST:event_txtTermoKeyPressed
+
+    private void tableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tableMouseClicked
+        
+        if(evt.getClickCount() == 2){
+            this.e = lista.get(table.getSelectedRow());
+            System.out.println("Item selecionado");
+            this.dispose();
+        }
+        
+    }//GEN-LAST:event_tableMouseClicked
 
 
     public static void main(String args[]) {

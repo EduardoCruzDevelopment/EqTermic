@@ -737,6 +737,17 @@ public class MainTela extends javax.swing.JFrame {
                 if(combTempIni.equals("°C")){
                     System.out.println(Math.pow(10,Integer.parseInt(qcTxtTempIniPow.getText())) * Double.parseDouble(qcTxtTempIni.getText()));
                     ie.setTempInicial(Math.pow(10,Integer.parseInt(qcTxtTempIniPow.getText())) * Double.parseDouble(qcTxtTempIni.getText()));
+                }else if(combTempIni.equals("K")){
+                
+                    System.out.println(Math.pow(10,Integer.parseInt(qcTxtTempIniPow.getText())) * Double.parseDouble(qcTxtTempIni.getText()));    
+                    Double temp = Math.pow(10,Integer.parseInt(qcTxtTempIniPow.getText())) * Double.parseDouble(qcTxtTempIni.getText());
+                    
+                    if(temp>=0){
+                        ie.setTempInicial(c.temperatura(combTempIni,"°C",temp));
+                    }else{
+                        throw new Exception("Kelvin negativo");     
+                    }
+                
                 }else{
                     ie.setTempInicial(c.temperatura(combTempIni, "°C",
                         Math.pow(10,Integer.parseInt(qcTxtTempIniPow.getText())) * Double.parseDouble(qcTxtTempIni.getText())));
@@ -744,6 +755,17 @@ public class MainTela extends javax.swing.JFrame {
 
                 if(combTempFin.equals("°C")){
                     ie.setTempFinal(Math.pow(10,Integer.parseInt(qcTxtTempFinPow.getText())) * Double.parseDouble(qcTxtTempFin.getText()));
+                }else if(combTempFin.equals("K")){
+                
+                    System.out.println(Math.pow(10,Integer.parseInt(qcTxtTempFinPow.getText())) * Double.parseDouble(qcTxtTempFin.getText()));    
+                    Double temp = Math.pow(10,Integer.parseInt(qcTxtTempFinPow.getText())) * Double.parseDouble(qcTxtTempFin.getText());
+                    
+                    if(temp>=0){
+                        ie.setTempFinal(c.temperatura(combTempFin,"°C",temp));
+                    }else{
+                        throw new Exception("Kelvin negativo");     
+                    }
+                
                 }else{
                     ie.setTempFinal(c.temperatura(combTempFin, "°C",
                     Math.pow(10,Integer.parseInt(qcTxtTempFinPow.getText())) * Double.parseDouble(qcTxtTempFin.getText())));
@@ -754,9 +776,12 @@ public class MainTela extends javax.swing.JFrame {
                 qcClear("object");
 
             }catch(Exception e){
-                System.out.println("Erro na conversão de valores!--"+e.getMessage());
-
-                JOptionPane.showMessageDialog(null, "Preencha os campos corretamente!","InternalSystem",JOptionPane.ERROR_MESSAGE);
+                if(e.getMessage().equals("Kelvin negativo")){
+                    JOptionPane.showMessageDialog(null, "Valores em Kelvin são > 0!","InternalSystem",JOptionPane.ERROR_MESSAGE);
+                }else{
+                    System.out.println("Erro na conversão de valores!--"+e.getMessage());
+                    JOptionPane.showMessageDialog(null, "Preencha os campos corretamente!","InternalSystem",JOptionPane.ERROR_MESSAGE);
+                }    
             }
         
         }
@@ -952,6 +977,17 @@ public class MainTela extends javax.swing.JFrame {
                 if(combTempIni.equals("°C")){
                     System.out.println(Math.pow(10,Integer.parseInt(etTxtTempIniPow.getText())) * Double.parseDouble(etTxtTempIni.getText()));
                     iet.setTempIni(Math.pow(10,Integer.parseInt(etTxtTempIniPow.getText())) * Double.parseDouble(etTxtTempIni.getText()));
+                }else if(combTempIni.equals("K")){
+                
+                    System.out.println(Math.pow(10,Integer.parseInt(etTxtTempIniPow.getText())) * Double.parseDouble(etTxtTempIni.getText()));    
+                    Double temp = Math.pow(10,Integer.parseInt(etTxtTempIniPow.getText())) * Double.parseDouble(etTxtTempIni.getText());
+                    
+                    if(temp>=0){
+                        iet.setTempIni(c.temperatura(combTempIni,"°C",temp));
+                    }else{
+                        throw new Exception("Kelvin negativo");     
+                    }
+                
                 }else{
                     iet.setTempIni(c.temperatura(combTempIni, "°C",
                         Math.pow(10,Integer.parseInt(etTxtTempIniPow.getText())) * Double.parseDouble(etTxtTempIni.getText())));
@@ -962,9 +998,12 @@ public class MainTela extends javax.swing.JFrame {
                 etClear("object");
 
             }catch(Exception e){
-                System.out.println("Erro na conversão de valores!--"+e.getMessage());
-
-                JOptionPane.showMessageDialog(null, "Preencha os campos corretamente!","InternalSystem",JOptionPane.ERROR_MESSAGE);
+                if(e.getMessage().equals("Kelvin negativo")){
+                    JOptionPane.showMessageDialog(null, "Valores em Kelvin são > 0!","InternalSystem",JOptionPane.ERROR_MESSAGE);
+                }else{
+                    System.out.println("Erro na conversão de valores!--"+e.getMessage());
+                    JOptionPane.showMessageDialog(null, "Preencha os campos corretamente!","InternalSystem",JOptionPane.ERROR_MESSAGE);
+                }    
             }
         
         }

@@ -137,7 +137,7 @@ public class ProcessEquilibrioTermico {
         
     }
     
-    public void metodosemnome(List<ItensEquilibrioTermico> corpo){
+    public void mweiuf(List<ItensEquilibrioTermico> corpo){
         
         for (ItensEquilibrioTermico ie : corpo){
             

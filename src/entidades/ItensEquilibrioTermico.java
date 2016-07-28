@@ -4,7 +4,9 @@ package entidades;
 public class ItensEquilibrioTermico {
     
     private Integer id;
-    private Double tempIni,massa,capTermic;
+    private Double tempIni;
+    private Double massa;
+    private Double capTermic;
     private Elemento elemento;
 
     

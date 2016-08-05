@@ -12,30 +12,30 @@ public class ProcessQuantidadeCalor {
 
         BigDecimal result = new BigDecimal(0);
 
-        for (ItensQuantidadeCalor ie : corpo) {
+        for (ItensQuantidadeCalor iqc : corpo) {
 
-            System.out.println("Corpo: " + ie.getElemento().getNome());
+            System.out.println("Corpo: " + iqc.getElemento().getNome());
 
             
             BigDecimal m = new BigDecimal(0);
-            Double tF = ie.getElemento().getTempF();
-            Double tV = ie.getElemento().getTempV();
+            Double tF = iqc.getElemento().getTempF();
+            Double tV = iqc.getElemento().getTempV();
             System.out.println("Tp fusao - " + tF);
             System.out.println("Tp Vap - " + tV);
-            System.out.println("Temperatura inicial - " + ie.getTempInicial());
-            String pIni = position(ie.getTempInicial(), tF, tV);
-            System.out.println("Temperatura final - " + ie.getTempFinal());
-            String pFin = position(ie.getTempFinal(), tF, tV);
+            System.out.println("Temperatura inicial - " + iqc.getTempInicial());
+            String pIni = position(iqc.getTempInicial(), tF, tV);
+            System.out.println("Temperatura final - " + iqc.getTempFinal());
+            String pFin = position(iqc.getTempFinal(), tF, tV);
             
             //definindo a massa - inicio
             
-            if (ie.getCapTermic() != 0 && ie.getMassa() == 0.d) {
+            if (iqc.getCapTermic() != 0 && iqc.getMassa() == 0.d) {
 
                 System.out.println("Capacidade termica informada!");
                 
                 try{
                 
-                    m = defCapTermic(pIni,ie.getElemento(),ie.getCapTermic());
+                    m = defCapTermic(pIni,iqc.getElemento(),iqc.getCapTermic());
                     
                 }catch(Exception e){
                     
@@ -48,12 +48,12 @@ public class ProcessQuantidadeCalor {
 
             } else {
 
-                m = new BigDecimal(ie.getMassa());
+                m = new BigDecimal(iqc.getMassa());
 
             }
 
             //definindo a massa - final    
-            if (ie.getTempFinal() > ie.getTempInicial()) {
+            if (iqc.getTempFinal() > iqc.getTempInicial()) {
 
                 System.out.println("Resultado crescente");
 
@@ -61,18 +61,18 @@ public class ProcessQuantidadeCalor {
 
                     if (pFin.equals("antF")) {
 
-                        BigDecimal c = new BigDecimal(ie.getElemento().getcSolido()),
-                                dt = new BigDecimal(ie.getTempFinal() - ie.getTempInicial());
+                        BigDecimal c = new BigDecimal(iqc.getElemento().getcSolido()),
+                                dt = new BigDecimal(iqc.getTempFinal() - iqc.getTempInicial());
 
                         result = result.add(m.multiply(c.multiply(dt))); //solido
 
                     } else if (pFin.equals("onF")) {
 
-                        BigDecimal cs = new BigDecimal(ie.getElemento().getcSolido()),
-                                dt = new BigDecimal(ie.getTempFinal() - ie.getTempInicial()),
-                                clf = new BigDecimal(ie.getElemento().getlFusao());
+                        BigDecimal cs = new BigDecimal(iqc.getElemento().getcSolido()),
+                                dt = new BigDecimal(iqc.getTempFinal() - iqc.getTempInicial()),
+                                clf = new BigDecimal(iqc.getElemento().getlFusao());
 
-                        int r = JOptionPane.showConfirmDialog(null, "Deseja considerar a fusão do elemento " + ie.getElemento().getNome() + "?",
+                        int r = JOptionPane.showConfirmDialog(null, "Deseja considerar a fusão do elemento " + iqc.getElemento().getNome() + "?",
                                 "InternalSystem", JOptionPane.YES_NO_OPTION);
 
                         if (r == JOptionPane.YES_OPTION) {
@@ -88,11 +88,11 @@ public class ProcessQuantidadeCalor {
 
                     } else if (pFin.equals("antV")) {
 
-                        BigDecimal cs = new BigDecimal(ie.getElemento().getcSolido()),
-                                cl = new BigDecimal(ie.getElemento().getcLiquido()),
-                                dts = new BigDecimal(ie.getElemento().getTempF() - ie.getTempInicial()),
-                                dtl = new BigDecimal(ie.getTempFinal() - ie.getTempInicial()),
-                                clf = new BigDecimal(ie.getElemento().getlFusao());
+                        BigDecimal cs = new BigDecimal(iqc.getElemento().getcSolido()),
+                                cl = new BigDecimal(iqc.getElemento().getcLiquido()),
+                                dts = new BigDecimal(iqc.getElemento().getTempF() - iqc.getTempInicial()),
+                                dtl = new BigDecimal(iqc.getTempFinal() - iqc.getTempInicial()),
+                                clf = new BigDecimal(iqc.getElemento().getlFusao());
 
                         result = result.add((m.multiply(cs.multiply(dts))) //solido
                                 .add(m.multiply(cl.multiply(dtl))) //liquido
@@ -100,14 +100,14 @@ public class ProcessQuantidadeCalor {
 
                     } else if (pFin.equals("onV")) {
 
-                        BigDecimal cs = new BigDecimal(ie.getElemento().getcSolido()),
-                                cl = new BigDecimal(ie.getElemento().getcLiquido()),
-                                dts = new BigDecimal(ie.getElemento().getTempF() - ie.getTempInicial()),
-                                dtl = new BigDecimal(ie.getElemento().getTempV() - ie.getElemento().getTempF()),
-                                clf = new BigDecimal(ie.getElemento().getlFusao()),
-                                clv = new BigDecimal(ie.getElemento().getlVapor());
+                        BigDecimal cs = new BigDecimal(iqc.getElemento().getcSolido()),
+                                cl = new BigDecimal(iqc.getElemento().getcLiquido()),
+                                dts = new BigDecimal(iqc.getElemento().getTempF() - iqc.getTempInicial()),
+                                dtl = new BigDecimal(iqc.getElemento().getTempV() - iqc.getElemento().getTempF()),
+                                clf = new BigDecimal(iqc.getElemento().getlFusao()),
+                                clv = new BigDecimal(iqc.getElemento().getlVapor());
 
-                        int r = JOptionPane.showConfirmDialog(null, "Deseja considerar a vaporização do elemento " + ie.getElemento().getNome() + "?",
+                        int r = JOptionPane.showConfirmDialog(null, "Deseja considerar a vaporização do elemento " + iqc.getElemento().getNome() + "?",
                                 "InternalSystem", JOptionPane.YES_NO_OPTION);
 
                         if (r == JOptionPane.YES_OPTION) {
@@ -127,14 +127,14 @@ public class ProcessQuantidadeCalor {
 
                     } else if (pFin.equals("postV")) {
 
-                        BigDecimal cs = new BigDecimal(ie.getElemento().getcSolido()),
-                                cl = new BigDecimal(ie.getElemento().getcLiquido()),
-                                cg = new BigDecimal(ie.getElemento().getcGasoso()),
-                                dts = new BigDecimal(ie.getElemento().getTempF() - ie.getTempInicial()),
-                                dtl = new BigDecimal(ie.getElemento().getTempV() - ie.getElemento().getTempF()),
-                                dtg = new BigDecimal(ie.getTempFinal() - ie.getElemento().getTempV()),
-                                clf = new BigDecimal(ie.getElemento().getlFusao()),
-                                clv = new BigDecimal(ie.getElemento().getlVapor());
+                        BigDecimal cs = new BigDecimal(iqc.getElemento().getcSolido()),
+                                cl = new BigDecimal(iqc.getElemento().getcLiquido()),
+                                cg = new BigDecimal(iqc.getElemento().getcGasoso()),
+                                dts = new BigDecimal(iqc.getElemento().getTempF() - iqc.getTempInicial()),
+                                dtl = new BigDecimal(iqc.getElemento().getTempV() - iqc.getElemento().getTempF()),
+                                dtg = new BigDecimal(iqc.getTempFinal() - iqc.getElemento().getTempV()),
+                                clf = new BigDecimal(iqc.getElemento().getlFusao()),
+                                clv = new BigDecimal(iqc.getElemento().getlVapor());
 
                         result = result.add((m.multiply(cs.multiply(dts)))//solido
                                 .add(m.multiply(clf))//fusao
@@ -157,9 +157,9 @@ public class ProcessQuantidadeCalor {
 
                     } else if (pFin.equals("onF")) {
 
-                        BigDecimal clf = new BigDecimal(ie.getElemento().getlFusao());
+                        BigDecimal clf = new BigDecimal(iqc.getElemento().getlFusao());
 
-                        int r = JOptionPane.showConfirmDialog(null, "Deseja considerar a fusão do elemento " + ie.getElemento().getNome() + "?",
+                        int r = JOptionPane.showConfirmDialog(null, "Deseja considerar a fusão do elemento " + iqc.getElemento().getNome() + "?",
                                 "InternalSystem", JOptionPane.YES_NO_OPTION);
 
                         if (r == JOptionPane.YES_OPTION) {
@@ -170,11 +170,11 @@ public class ProcessQuantidadeCalor {
 
                     } else if (pFin.equals("antV")) {
 
-                        BigDecimal clf = new BigDecimal(ie.getElemento().getlFusao()),
-                                cl = new BigDecimal(ie.getElemento().getcLiquido()),
-                                dt = new BigDecimal(ie.getTempFinal() - ie.getElemento().getTempF());
+                        BigDecimal clf = new BigDecimal(iqc.getElemento().getlFusao()),
+                                cl = new BigDecimal(iqc.getElemento().getcLiquido()),
+                                dt = new BigDecimal(iqc.getTempFinal() - iqc.getElemento().getTempF());
 
-                        int r = JOptionPane.showConfirmDialog(null, "Deseja considerar a fusão do elemento " + ie.getElemento().getNome() + "?",
+                        int r = JOptionPane.showConfirmDialog(null, "Deseja considerar a fusão do elemento " + iqc.getElemento().getNome() + "?",
                                 "InternalSystem", JOptionPane.YES_NO_OPTION);
 
                         if (r == JOptionPane.YES_OPTION) {
@@ -190,12 +190,12 @@ public class ProcessQuantidadeCalor {
 
                     } else if (pFin.equals("onV")) {
 
-                        BigDecimal clf = new BigDecimal(ie.getElemento().getlFusao()),
-                                cl = new BigDecimal(ie.getElemento().getcLiquido()),
-                                dt = new BigDecimal(ie.getTempFinal() - ie.getElemento().getTempF()),
-                                clv = new BigDecimal(ie.getElemento().getlVapor());
+                        BigDecimal clf = new BigDecimal(iqc.getElemento().getlFusao()),
+                                cl = new BigDecimal(iqc.getElemento().getcLiquido()),
+                                dt = new BigDecimal(iqc.getTempFinal() - iqc.getElemento().getTempF()),
+                                clv = new BigDecimal(iqc.getElemento().getlVapor());
 
-                        int r = JOptionPane.showConfirmDialog(null, "Deseja considerar a fusão do elemento " + ie.getElemento().getNome() + "?",
+                        int r = JOptionPane.showConfirmDialog(null, "Deseja considerar a fusão do elemento " + iqc.getElemento().getNome() + "?",
                                 "InternalSystem", JOptionPane.YES_NO_OPTION);
 
                         if (r == JOptionPane.YES_OPTION) {
@@ -209,7 +209,7 @@ public class ProcessQuantidadeCalor {
 
                         }
 
-                        r = JOptionPane.showConfirmDialog(null, "Deseja considerar a vaporização do elemento " + ie.getElemento().getNome() + "?",
+                        r = JOptionPane.showConfirmDialog(null, "Deseja considerar a vaporização do elemento " + iqc.getElemento().getNome() + "?",
                                 "InternalSystem", JOptionPane.YES_NO_OPTION);
 
                         if (r == JOptionPane.YES_OPTION) {
@@ -220,14 +220,14 @@ public class ProcessQuantidadeCalor {
 
                     } else if (pFin.equals("postV")) {
 
-                        BigDecimal clf = new BigDecimal(ie.getElemento().getlFusao()),
-                                cl = new BigDecimal(ie.getElemento().getcLiquido()),
-                                clv = new BigDecimal(ie.getElemento().getlVapor()),
-                                cv = new BigDecimal(ie.getElemento().getcGasoso()),
-                                dtl = new BigDecimal(ie.getElemento().getTempV() - ie.getTempInicial()),
-                                dtv = new BigDecimal(ie.getTempFinal() - ie.getElemento().getTempV());
+                        BigDecimal clf = new BigDecimal(iqc.getElemento().getlFusao()),
+                                cl = new BigDecimal(iqc.getElemento().getcLiquido()),
+                                clv = new BigDecimal(iqc.getElemento().getlVapor()),
+                                cv = new BigDecimal(iqc.getElemento().getcGasoso()),
+                                dtl = new BigDecimal(iqc.getElemento().getTempV() - iqc.getTempInicial()),
+                                dtv = new BigDecimal(iqc.getTempFinal() - iqc.getElemento().getTempV());
 
-                        int r = JOptionPane.showConfirmDialog(null, "Deseja considerar a fusão do elemento " + ie.getElemento().getNome() + "?",
+                        int r = JOptionPane.showConfirmDialog(null, "Deseja considerar a fusão do elemento " + iqc.getElemento().getNome() + "?",
                                 "InternalSystem", JOptionPane.YES_NO_OPTION);
 
                         if (r == JOptionPane.YES_OPTION) {
@@ -264,18 +264,18 @@ public class ProcessQuantidadeCalor {
 
                     } else if (pFin.equals("antV")) {
 
-                        BigDecimal cl = new BigDecimal(ie.getElemento().getcLiquido()),
-                                dt = new BigDecimal(ie.getTempFinal() - ie.getTempInicial());
+                        BigDecimal cl = new BigDecimal(iqc.getElemento().getcLiquido()),
+                                dt = new BigDecimal(iqc.getTempFinal() - iqc.getTempInicial());
 
                         result = result.add(m.multiply(cl.multiply(dt))); //liquido
 
                     } else if (pFin.equals("onV")) {
 
-                        BigDecimal cl = new BigDecimal(ie.getElemento().getcLiquido()),
-                                dt = new BigDecimal(ie.getTempFinal() - ie.getTempInicial()),
-                                clv = new BigDecimal(ie.getElemento().getlVapor());
+                        BigDecimal cl = new BigDecimal(iqc.getElemento().getcLiquido()),
+                                dt = new BigDecimal(iqc.getTempFinal() - iqc.getTempInicial()),
+                                clv = new BigDecimal(iqc.getElemento().getlVapor());
 
-                        int r = JOptionPane.showConfirmDialog(null, "Deseja considerar a vaporização do elemento " + ie.getElemento().getNome() + "?",
+                        int r = JOptionPane.showConfirmDialog(null, "Deseja considerar a vaporização do elemento " + iqc.getElemento().getNome() + "?",
                                 "InternalSystem", JOptionPane.YES_NO_OPTION);
 
                         if (r == JOptionPane.YES_OPTION) {
@@ -291,11 +291,11 @@ public class ProcessQuantidadeCalor {
 
                     } else if (pFin.equals("postV")) {
 
-                        BigDecimal cl = new BigDecimal(ie.getElemento().getcLiquido()),
-                                dtl = new BigDecimal(ie.getElemento().getTempV() - ie.getTempInicial()),
-                                clv = new BigDecimal(ie.getElemento().getlVapor()),
-                                cv = new BigDecimal(ie.getElemento().getcGasoso()),
-                                dtv = new BigDecimal(ie.getTempFinal() - ie.getElemento().getTempV());
+                        BigDecimal cl = new BigDecimal(iqc.getElemento().getcLiquido()),
+                                dtl = new BigDecimal(iqc.getElemento().getTempV() - iqc.getTempInicial()),
+                                clv = new BigDecimal(iqc.getElemento().getlVapor()),
+                                cv = new BigDecimal(iqc.getElemento().getcGasoso()),
+                                dtv = new BigDecimal(iqc.getTempFinal() - iqc.getElemento().getTempV());
 
                         result = result.add((m.multiply(cl.multiply(dtl))) //liquido
                                 .add(m.multiply(clv)) // vaporizacao
@@ -324,9 +324,9 @@ public class ProcessQuantidadeCalor {
 
                     } else if (pFin.equals("onV")) {
 
-                        BigDecimal clv = new BigDecimal(ie.getElemento().getlVapor());
+                        BigDecimal clv = new BigDecimal(iqc.getElemento().getlVapor());
 
-                        int r = JOptionPane.showConfirmDialog(null, "Deseja considerar a vaporização do elemento " + ie.getElemento().getNome() + "?",
+                        int r = JOptionPane.showConfirmDialog(null, "Deseja considerar a vaporização do elemento " + iqc.getElemento().getNome() + "?",
                                 "InternalSystem", JOptionPane.YES_NO_OPTION);
 
                         if (r == JOptionPane.YES_OPTION) {
@@ -337,11 +337,11 @@ public class ProcessQuantidadeCalor {
 
                     } else if (pFin.equals("postV")) {
 
-                        BigDecimal clv = new BigDecimal(ie.getElemento().getlVapor()),
-                                cv = new BigDecimal(ie.getElemento().getcGasoso()),
-                                dtv = new BigDecimal(ie.getTempFinal() - ie.getElemento().getTempV());
+                        BigDecimal clv = new BigDecimal(iqc.getElemento().getlVapor()),
+                                cv = new BigDecimal(iqc.getElemento().getcGasoso()),
+                                dtv = new BigDecimal(iqc.getTempFinal() - iqc.getElemento().getTempV());
 
-                        int r = JOptionPane.showConfirmDialog(null, "Deseja considerar a vaporização do elemento " + ie.getElemento().getNome() + "?",
+                        int r = JOptionPane.showConfirmDialog(null, "Deseja considerar a vaporização do elemento " + iqc.getElemento().getNome() + "?",
                                 "InternalSystem", JOptionPane.YES_NO_OPTION);
 
                         if (r == JOptionPane.YES_OPTION) {
@@ -380,8 +380,8 @@ public class ProcessQuantidadeCalor {
 
                     } else if (pFin.equals("postV")) {
 
-                        BigDecimal cv = new BigDecimal(ie.getElemento().getcGasoso()),
-                                dt = new BigDecimal(ie.getTempFinal() - ie.getTempInicial());
+                        BigDecimal cv = new BigDecimal(iqc.getElemento().getcGasoso()),
+                                dt = new BigDecimal(iqc.getTempFinal() - iqc.getTempInicial());
 
                         result = result.add(m.multiply(cv.multiply(dt))); //gasoso
 
@@ -398,11 +398,11 @@ public class ProcessQuantidadeCalor {
 
                 }
 
-            } else if (ie.getTempInicial().equals(ie.getTempFinal())) {
+            } else if (iqc.getTempInicial().equals(iqc.getTempFinal())) {
 
                 System.out.println("As temperaturas são iguais");
 
-            } else if (ie.getTempInicial() > ie.getTempFinal()) {
+            } else if (iqc.getTempInicial() > iqc.getTempFinal()) {
 
                 System.out.println("Resultado decrescente");
 
@@ -410,8 +410,8 @@ public class ProcessQuantidadeCalor {
 
                     if (pFin.equals("antF")) {
 
-                        BigDecimal c = new BigDecimal(ie.getElemento().getcSolido()),
-                                dt = new BigDecimal(ie.getTempFinal() - ie.getTempInicial());
+                        BigDecimal c = new BigDecimal(iqc.getElemento().getcSolido()),
+                                dt = new BigDecimal(iqc.getTempFinal() - iqc.getTempInicial());
 
                         result = result.add(m.multiply(c.multiply(dt))); //solido
 
@@ -441,11 +441,11 @@ public class ProcessQuantidadeCalor {
                 } else if (pIni.equals("onF")) {
 
                     if (pFin.equals("antF")) {
-                        BigDecimal c = new BigDecimal(ie.getElemento().getcSolido()),
-                                dt = new BigDecimal(ie.getTempFinal() - ie.getTempInicial()),
-                                clf = new BigDecimal((ie.getElemento().getlFusao()) * -1);
+                        BigDecimal c = new BigDecimal(iqc.getElemento().getcSolido()),
+                                dt = new BigDecimal(iqc.getTempFinal() - iqc.getTempInicial()),
+                                clf = new BigDecimal((iqc.getElemento().getlFusao()) * -1);
 
-                        int r = JOptionPane.showConfirmDialog(null, "Deseja considerar a solidificação do elemento " + ie.getElemento().getNome() + "?",
+                        int r = JOptionPane.showConfirmDialog(null, "Deseja considerar a solidificação do elemento " + iqc.getElemento().getNome() + "?",
                                 "InternalSystem", JOptionPane.YES_NO_OPTION);
 
                         if (r == JOptionPane.YES_OPTION) {
@@ -461,11 +461,11 @@ public class ProcessQuantidadeCalor {
 
                     } else if (pFin.equals("onF")) {
 
-                        BigDecimal c = new BigDecimal(ie.getElemento().getcSolido()),
-                                dt = new BigDecimal(ie.getTempFinal() - ie.getTempInicial()),
-                                clf = new BigDecimal((ie.getElemento().getlFusao()) * -1);
+                        BigDecimal c = new BigDecimal(iqc.getElemento().getcSolido()),
+                                dt = new BigDecimal(iqc.getTempFinal() - iqc.getTempInicial()),
+                                clf = new BigDecimal((iqc.getElemento().getlFusao()) * -1);
 
-                        int r = JOptionPane.showConfirmDialog(null, "Deseja considerar a solidificação do elemento " + ie.getElemento().getNome() + "?",
+                        int r = JOptionPane.showConfirmDialog(null, "Deseja considerar a solidificação do elemento " + iqc.getElemento().getNome() + "?",
                                 "InternalSystem", JOptionPane.YES_NO_OPTION);
 
                         if (r == JOptionPane.YES_OPTION) {
@@ -497,11 +497,11 @@ public class ProcessQuantidadeCalor {
 
                     if (pFin.equals("antF")) {
 
-                        BigDecimal cl = new BigDecimal(ie.getElemento().getcLiquido()),
-                                cs = new BigDecimal(ie.getElemento().getcSolido()),
-                                dtl = new BigDecimal(ie.getElemento().getTempF() - ie.getTempInicial()),
-                                dts = new BigDecimal(ie.getTempFinal() - ie.getElemento().getTempF()),
-                                cls = new BigDecimal((ie.getElemento().getlFusao()) * -1);
+                        BigDecimal cl = new BigDecimal(iqc.getElemento().getcLiquido()),
+                                cs = new BigDecimal(iqc.getElemento().getcSolido()),
+                                dtl = new BigDecimal(iqc.getElemento().getTempF() - iqc.getTempInicial()),
+                                dts = new BigDecimal(iqc.getTempFinal() - iqc.getElemento().getTempF()),
+                                cls = new BigDecimal((iqc.getElemento().getlFusao()) * -1);
 
                         result = result.add(m.multiply(cl.multiply(dtl)) //liquido
                                 .add(m.multiply(cls)) //fusao
@@ -509,11 +509,11 @@ public class ProcessQuantidadeCalor {
 
                     } else if (pFin.equals("onF")) {
 
-                        BigDecimal c = new BigDecimal(ie.getElemento().getcLiquido()),
-                                dt = new BigDecimal(ie.getTempFinal() - ie.getTempInicial()),
-                                cl = new BigDecimal((ie.getElemento().getlFusao()) * -1);
+                        BigDecimal c = new BigDecimal(iqc.getElemento().getcLiquido()),
+                                dt = new BigDecimal(iqc.getTempFinal() - iqc.getTempInicial()),
+                                cl = new BigDecimal((iqc.getElemento().getlFusao()) * -1);
 
-                        int r = JOptionPane.showConfirmDialog(null, "Deseja considerar a solidificação do elemento " + ie.getElemento().getNome() + "?",
+                        int r = JOptionPane.showConfirmDialog(null, "Deseja considerar a solidificação do elemento " + iqc.getElemento().getNome() + "?",
                                 "InternalSystem", JOptionPane.YES_NO_OPTION);
 
                         if (r == JOptionPane.YES_OPTION) {
@@ -529,8 +529,8 @@ public class ProcessQuantidadeCalor {
 
                     } else if (pFin.equals("antV")) {
 
-                        BigDecimal c = new BigDecimal(ie.getElemento().getcLiquido()),
-                                dt = new BigDecimal(ie.getTempFinal() - ie.getTempInicial());
+                        BigDecimal c = new BigDecimal(iqc.getElemento().getcLiquido()),
+                                dt = new BigDecimal(iqc.getTempFinal() - iqc.getTempInicial());
 
                         result = result.add(m.multiply(c.multiply(dt))); //liquido
 
@@ -553,14 +553,14 @@ public class ProcessQuantidadeCalor {
 
                     if (pFin.equals("antF")) {
 
-                        BigDecimal cl = new BigDecimal(ie.getElemento().getcLiquido()),
-                                cs = new BigDecimal(ie.getElemento().getcSolido()),
-                                dtl = new BigDecimal(ie.getElemento().getTempF() - ie.getTempInicial()),
-                                dts = new BigDecimal(ie.getTempFinal() - ie.getElemento().getTempF()),
-                                cls = new BigDecimal((ie.getElemento().getlFusao()) * -1),
-                                clv = new BigDecimal((ie.getElemento().getlVapor()) * -1);
+                        BigDecimal cl = new BigDecimal(iqc.getElemento().getcLiquido()),
+                                cs = new BigDecimal(iqc.getElemento().getcSolido()),
+                                dtl = new BigDecimal(iqc.getElemento().getTempF() - iqc.getTempInicial()),
+                                dts = new BigDecimal(iqc.getTempFinal() - iqc.getElemento().getTempF()),
+                                cls = new BigDecimal((iqc.getElemento().getlFusao()) * -1),
+                                clv = new BigDecimal((iqc.getElemento().getlVapor()) * -1);
 
-                        int r = JOptionPane.showConfirmDialog(null, "Deseja considerar a liquefação do elemento " + ie.getElemento().getNome() + "?",
+                        int r = JOptionPane.showConfirmDialog(null, "Deseja considerar a liquefação do elemento " + iqc.getElemento().getNome() + "?",
                                 "InternalSystem", JOptionPane.YES_NO_OPTION);
 
                         if (r == JOptionPane.YES_OPTION) {
@@ -580,12 +580,12 @@ public class ProcessQuantidadeCalor {
 
                     } else if (pFin.equals("onF")) {
 
-                        BigDecimal c = new BigDecimal(ie.getElemento().getcLiquido()),
-                                dt = new BigDecimal(ie.getElemento().getTempF() - ie.getTempInicial()),
-                                cls = new BigDecimal((ie.getElemento().getlFusao()) * -1),
-                                clv = new BigDecimal((ie.getElemento().getlVapor()) * -1);
+                        BigDecimal c = new BigDecimal(iqc.getElemento().getcLiquido()),
+                                dt = new BigDecimal(iqc.getElemento().getTempF() - iqc.getTempInicial()),
+                                cls = new BigDecimal((iqc.getElemento().getlFusao()) * -1),
+                                clv = new BigDecimal((iqc.getElemento().getlVapor()) * -1);
 
-                        int r = JOptionPane.showConfirmDialog(null, "Deseja considerar a liquefação do elemento " + ie.getElemento().getNome() + "?",
+                        int r = JOptionPane.showConfirmDialog(null, "Deseja considerar a liquefação do elemento " + iqc.getElemento().getNome() + "?",
                                 "InternalSystem", JOptionPane.YES_NO_OPTION);
 
                         if (r == JOptionPane.YES_OPTION) {
@@ -599,7 +599,7 @@ public class ProcessQuantidadeCalor {
 
                         }
 
-                        r = JOptionPane.showConfirmDialog(null, "Deseja considerar a solidificação do elemento " + ie.getElemento().getNome() + "?",
+                        r = JOptionPane.showConfirmDialog(null, "Deseja considerar a solidificação do elemento " + iqc.getElemento().getNome() + "?",
                                 "InternalSystem", JOptionPane.YES_NO_OPTION);
 
                         if (r == JOptionPane.YES_OPTION) {
@@ -610,11 +610,11 @@ public class ProcessQuantidadeCalor {
 
                     } else if (pFin.equals("antV")) {
 
-                        BigDecimal c = new BigDecimal(ie.getElemento().getcLiquido()),
-                                dt = new BigDecimal(ie.getTempFinal() - ie.getTempInicial()),
-                                clv = new BigDecimal((ie.getElemento().getlVapor()) * -1);
+                        BigDecimal c = new BigDecimal(iqc.getElemento().getcLiquido()),
+                                dt = new BigDecimal(iqc.getTempFinal() - iqc.getTempInicial()),
+                                clv = new BigDecimal((iqc.getElemento().getlVapor()) * -1);
 
-                        int r = JOptionPane.showConfirmDialog(null, "Deseja considerar a liquefação do elemento " + ie.getElemento().getNome() + "?",
+                        int r = JOptionPane.showConfirmDialog(null, "Deseja considerar a liquefação do elemento " + iqc.getElemento().getNome() + "?",
                                 "InternalSystem", JOptionPane.YES_NO_OPTION);
 
                         if (r == JOptionPane.YES_OPTION) {
@@ -630,9 +630,9 @@ public class ProcessQuantidadeCalor {
 
                     } else if (pFin.equals("onV")) {
 
-                        BigDecimal clv = new BigDecimal((ie.getElemento().getlVapor()) * -1);
+                        BigDecimal clv = new BigDecimal((iqc.getElemento().getlVapor()) * -1);
 
-                        int r = JOptionPane.showConfirmDialog(null, "Deseja considerar a liquefação do elemento " + ie.getElemento().getNome() + "?",
+                        int r = JOptionPane.showConfirmDialog(null, "Deseja considerar a liquefação do elemento " + iqc.getElemento().getNome() + "?",
                                 "InternalSystem", JOptionPane.YES_NO_OPTION);
 
                         if (r == JOptionPane.YES_OPTION) {
@@ -656,14 +656,14 @@ public class ProcessQuantidadeCalor {
 
                     if (pFin.equals("antF")) {
 
-                        BigDecimal cl = new BigDecimal(ie.getElemento().getcLiquido()),
-                                cs = new BigDecimal(ie.getElemento().getcSolido()),
-                                cg = new BigDecimal(ie.getElemento().getcGasoso()),
-                                dts = new BigDecimal(ie.getTempFinal() - ie.getElemento().getTempF()),
-                                dtl = new BigDecimal(ie.getElemento().getTempF() - ie.getElemento().getTempV()),
-                                dtg = new BigDecimal(ie.getElemento().getTempV() - ie.getTempInicial()),
-                                cls = new BigDecimal((ie.getElemento().getlFusao()) * -1),
-                                clv = new BigDecimal((ie.getElemento().getlVapor()) * -1);
+                        BigDecimal cl = new BigDecimal(iqc.getElemento().getcLiquido()),
+                                cs = new BigDecimal(iqc.getElemento().getcSolido()),
+                                cg = new BigDecimal(iqc.getElemento().getcGasoso()),
+                                dts = new BigDecimal(iqc.getTempFinal() - iqc.getElemento().getTempF()),
+                                dtl = new BigDecimal(iqc.getElemento().getTempF() - iqc.getElemento().getTempV()),
+                                dtg = new BigDecimal(iqc.getElemento().getTempV() - iqc.getTempInicial()),
+                                cls = new BigDecimal((iqc.getElemento().getlFusao()) * -1),
+                                clv = new BigDecimal((iqc.getElemento().getlVapor()) * -1);
 
                         result = result.add(m.multiply(cg.multiply(dtg)) //vapor
                                 .add(m.multiply(clv)) //vaporizacao
@@ -673,14 +673,14 @@ public class ProcessQuantidadeCalor {
 
                     } else if (pFin.equals("onF")) {
 
-                        BigDecimal cl = new BigDecimal(ie.getElemento().getcLiquido()),
-                                cg = new BigDecimal(ie.getElemento().getcGasoso()),
-                                dtl = new BigDecimal(ie.getTempFinal() - ie.getElemento().getTempV()),
-                                dtg = new BigDecimal(ie.getElemento().getTempV() - ie.getTempInicial()),
-                                cls = new BigDecimal((ie.getElemento().getlFusao()) * -1),
-                                clv = new BigDecimal((ie.getElemento().getlVapor()) * -1);
+                        BigDecimal cl = new BigDecimal(iqc.getElemento().getcLiquido()),
+                                cg = new BigDecimal(iqc.getElemento().getcGasoso()),
+                                dtl = new BigDecimal(iqc.getTempFinal() - iqc.getElemento().getTempV()),
+                                dtg = new BigDecimal(iqc.getElemento().getTempV() - iqc.getTempInicial()),
+                                cls = new BigDecimal((iqc.getElemento().getlFusao()) * -1),
+                                clv = new BigDecimal((iqc.getElemento().getlVapor()) * -1);
 
-                        int r = JOptionPane.showConfirmDialog(null, "Deseja considerar a solidificação do elemento " + ie.getElemento().getNome() + "?",
+                        int r = JOptionPane.showConfirmDialog(null, "Deseja considerar a solidificação do elemento " + iqc.getElemento().getNome() + "?",
                                 "InternalSystem", JOptionPane.YES_NO_OPTION);
 
                         if (r == JOptionPane.YES_OPTION) {
@@ -700,11 +700,11 @@ public class ProcessQuantidadeCalor {
 
                     } else if (pFin.equals("antV")) {
 
-                        BigDecimal cl = new BigDecimal(ie.getElemento().getcLiquido()),
-                                cg = new BigDecimal(ie.getElemento().getcGasoso()),
-                                dtl = new BigDecimal(ie.getTempFinal() - ie.getElemento().getTempV()),
-                                dtg = new BigDecimal(ie.getElemento().getTempV() - ie.getTempInicial()),
-                                clv = new BigDecimal((ie.getElemento().getlVapor()) * -1);
+                        BigDecimal cl = new BigDecimal(iqc.getElemento().getcLiquido()),
+                                cg = new BigDecimal(iqc.getElemento().getcGasoso()),
+                                dtl = new BigDecimal(iqc.getTempFinal() - iqc.getElemento().getTempV()),
+                                dtg = new BigDecimal(iqc.getElemento().getTempV() - iqc.getTempInicial()),
+                                clv = new BigDecimal((iqc.getElemento().getlVapor()) * -1);
 
                         result = result.add(m.multiply(cg.multiply(dtg)) //vapor
                                 .add(m.multiply(clv)) //vaporizacao
@@ -712,11 +712,11 @@ public class ProcessQuantidadeCalor {
 
                     } else if (pFin.equals("onV")) {
 
-                        BigDecimal c = new BigDecimal(ie.getElemento().getcGasoso()),
-                                dt = new BigDecimal(ie.getTempFinal() - ie.getTempInicial()),
-                                clv = new BigDecimal((ie.getElemento().getlVapor()) * -1);
+                        BigDecimal c = new BigDecimal(iqc.getElemento().getcGasoso()),
+                                dt = new BigDecimal(iqc.getTempFinal() - iqc.getTempInicial()),
+                                clv = new BigDecimal((iqc.getElemento().getlVapor()) * -1);
 
-                        int r = JOptionPane.showConfirmDialog(null, "Deseja considerar a liquifação do elemento " + ie.getElemento().getNome() + "?",
+                        int r = JOptionPane.showConfirmDialog(null, "Deseja considerar a liquifação do elemento " + iqc.getElemento().getNome() + "?",
                                 "InternalSystem", JOptionPane.YES_NO_OPTION);
 
                         if (r == JOptionPane.YES_OPTION) {
@@ -732,8 +732,8 @@ public class ProcessQuantidadeCalor {
 
                     } else if (pFin.equals("postV")) {
 
-                        BigDecimal c = new BigDecimal(ie.getElemento().getcGasoso()),
-                                dt = new BigDecimal(ie.getTempFinal() - ie.getTempInicial());
+                        BigDecimal c = new BigDecimal(iqc.getElemento().getcGasoso()),
+                                dt = new BigDecimal(iqc.getTempFinal() - iqc.getTempInicial());
 
                         result = result.add(m.multiply(c.multiply(dt))); //vapor
 

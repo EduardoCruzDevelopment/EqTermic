@@ -1,8 +1,10 @@
 package processors;
 
+import entidades.Elemento;
 import entidades.ItensEquilibrioTermico;
 import java.math.BigDecimal;
 import java.util.List;
+import javax.swing.JOptionPane;
 
 public class ProcessEquilibrioTermico {
     
@@ -137,23 +139,94 @@ public class ProcessEquilibrioTermico {
         
     }
     
-    public void mweiuf(List<ItensEquilibrioTermico> corpo){
+    public BigDecimal calc(List<ItensEquilibrioTermico> corpo) throws Exception{
         
-        for (ItensEquilibrioTermico ie : corpo){
+        for (ItensEquilibrioTermico iet : corpo) {
+
             
-            System.out.println("Corpo Referente: "+ie.getElemento().getNome()+"/n");
+            //pegando valores
             
-            BigDecimal ced = new BigDecimal(0);
+            Elemento e = iet.getElemento();
+            BigDecimal cs = new BigDecimal(e.getcSolido());
+            BigDecimal cl = new BigDecimal(e.getcLiquido());
+            BigDecimal cg = new BigDecimal(e.getcGasoso());
+            BigDecimal clf = new BigDecimal(e.getlFusao());
+            BigDecimal clv = new BigDecimal(e.getlVapor());
+            BigDecimal clfn = new BigDecimal(e.getlFusao()*-1);
+            BigDecimal clvn = new BigDecimal(e.getlVapor()*-1);
             
-            for (ItensEquilibrioTermico iec : corpo){
+            BigDecimal tempIni = new BigDecimal(iet.getTempIni());
+            BigDecimal m = new BigDecimal(0);
+
+            if (iet.getCapTermic() != 0 && iet.getMassa() == 0.d) {
+
+                System.out.println("Capacidade termica informada!");
                 
-                if(ie!=iec){
-    
+                try{
                     
-                
+                    String pIni = position(tempIni.doubleValue(),e.getTempF(),e.getTempV());
+                    
+                    m = defCapTermic(pIni,e,iet.getCapTermic());
+                    
+                }catch(Exception ex){
+                    
+                    JOptionPane.showMessageDialog(null, "InternalSystem","Não é possivel calcular a capacidade termica de elementos em mudança de fase!"
+                                                  ,JOptionPane.ERROR_MESSAGE);
+                    
+                    m = new BigDecimal(0);
+                    cs = new BigDecimal(0);
+                    cl = new BigDecimal(0);
+                    cg = new BigDecimal(0);
+                    clf = new BigDecimal(0);
+                    clv = new BigDecimal(0);
+                    clfn = new BigDecimal(0);
+                    clvn = new BigDecimal(0);
+                    tempIni = new BigDecimal(0);
+                    
                 }
-                
+
+            } else {
+
+                m = new BigDecimal(iet.getMassa());
+
             }
+
+            //pegando valores --- end
+            
+            
+        
+        }
+        
+        
+        return null;
+        
+    }
+    
+    private BigDecimal defCapTermic(String pIni,Elemento e, Double cap) throws Exception {
+
+        if(pIni.equals("antF")){
+            
+            return new BigDecimal(cap/e.getcSolido());
+            
+        }else if(pIni.equals("onF")){
+            
+            throw new Exception("Impossível calcular a capacidade termica");
+                    
+        }else if(pIni.equals("antV")){
+            
+            return new BigDecimal(cap/e.getcLiquido());
+            
+        }else if(pIni.equals("onV")){
+            
+            throw new Exception("Impossível calcular a capacidade termica");
+            
+        }else if(pIni.equals("postV")){
+            
+            return new BigDecimal (cap/e.getcGasoso());
+            
+        }else{
+            
+            throw new Exception("Impossível calcular a capacidade termica");
             
         }
         

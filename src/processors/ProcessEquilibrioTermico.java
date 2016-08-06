@@ -3,6 +3,7 @@ package processors;
 import entidades.Elemento;
 import entidades.ItensEquilibrioTermico;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JOptionPane;
 
@@ -140,6 +141,8 @@ public class ProcessEquilibrioTermico {
     }
     
     public BigDecimal calc(List<ItensEquilibrioTermico> corpo) throws Exception{
+               
+        List<eqSemFaseChange> qsfc = new ArrayList();
         
         for (ItensEquilibrioTermico iet : corpo) {
 
@@ -154,18 +157,16 @@ public class ProcessEquilibrioTermico {
             BigDecimal clv = new BigDecimal(e.getlVapor());
             BigDecimal clfn = new BigDecimal(e.getlFusao()*-1);
             BigDecimal clvn = new BigDecimal(e.getlVapor()*-1);
-            
             BigDecimal tempIni = new BigDecimal(iet.getTempIni());
             BigDecimal m = new BigDecimal(0);
+            String pIni = position(tempIni.doubleValue(),e.getTempF(),e.getTempV());
 
             if (iet.getCapTermic() != 0 && iet.getMassa() == 0.d) {
 
                 System.out.println("Capacidade termica informada!");
                 
                 try{
-                    
-                    String pIni = position(tempIni.doubleValue(),e.getTempF(),e.getTempV());
-                    
+   
                     m = defCapTermic(pIni,e,iet.getCapTermic());
                     
                 }catch(Exception ex){
@@ -188,12 +189,56 @@ public class ProcessEquilibrioTermico {
             } else {
 
                 m = new BigDecimal(iet.getMassa());
-
+     
             }
 
             //pegando valores --- end
             
-            
+            if(e.getcLiquido().equals(1)){
+                //é agua
+                
+                
+            }else{
+                //nao é agua
+                
+                eqSemFaseChange eq = new eqSemFaseChange();
+                
+                if(pIni.equals("antF")){
+                    
+                    eq.c = new BigDecimal(e.getcSolido());
+                    eq.t0 = tempIni;
+                    eq.m = m;
+                    qsfc.add(eq);
+                    
+                }else if(pIni.equals("onF")){
+                    
+                    throw new Exception("material diferente de agua com mudanca de fase");
+                    
+                }else if(pIni.equals("antV")){
+                    
+                    eq.c = new BigDecimal(e.getcLiquido());
+                    eq.t0 = tempIni;
+                    eq.m = m;
+                    qsfc.add(eq);
+                    
+                }else if(pIni.equals("onV")){
+                    
+                    throw new Exception("material diferente de agua com mudanca de fase");
+                
+                }else if(pIni.equals("postV")){
+                    
+                    eq.c = new BigDecimal(e.getcGasoso());
+                    eq.t0 = tempIni;
+                    eq.m = m;
+                    qsfc.add(eq);
+                    
+                }else{
+                    
+                    throw new Exception("erro geral formacao de equacao diferente de agua");
+                    
+                }
+                        
+            }
         
         }
         
@@ -229,6 +274,20 @@ public class ProcessEquilibrioTermico {
             throw new Exception("Impossível calcular a capacidade termica");
             
         }
+        
+    }
+    
+    public class eqSemFaseChange{
+        
+        private BigDecimal m;
+        private BigDecimal c;
+        private BigDecimal t0;
+        
+    }
+    
+    public class eqComFaseChange{
+        
+        
         
     }
     

@@ -3,14 +3,19 @@ package processors;
 import entidades.Elemento;
 import entidades.ItensEquilibrioTermico;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JOptionPane;
 
 public class ProcessEquilibrioTermico {
     
-    public Integer precision;
-    
+    private Integer precision;
+
+    public ProcessEquilibrioTermico(Integer precision) {
+        this.precision = precision;
+    }
+
     private String position(Double tmp, Double tF, Double tV) throws Exception {
 
         System.out.println("Classificando...");
@@ -142,8 +147,8 @@ public class ProcessEquilibrioTermico {
     
     public BigDecimal calc(List<ItensEquilibrioTermico> corpo) throws Exception{
                
-        List<eqSemFaseChange> qsfc = new ArrayList();
-        
+        List<eqNoFaseChange> listNoFaseChange = new ArrayList();
+        List<eqComFaseChange> listComFaseChange = new ArrayList();
         for (ItensEquilibrioTermico iet : corpo) {
 
             
@@ -196,19 +201,22 @@ public class ProcessEquilibrioTermico {
             
             if(e.getcLiquido().equals(1)){
                 //é agua
-                
+                eqComFaseChange eq = new eqComFaseChange();
+                eq.m = m;
+                eq.tempIni = tempIni;
+                listComFaseChange.add(eq);
                 
             }else{
                 //nao é agua
                 
-                eqSemFaseChange eq = new eqSemFaseChange();
+                eqNoFaseChange eq = new eqNoFaseChange();
                 
                 if(pIni.equals("antF")){
                     
                     eq.c = new BigDecimal(e.getcSolido());
-                    eq.t0 = tempIni;
+                    eq.tempIni = tempIni;
                     eq.m = m;
-                    qsfc.add(eq);
+                    listNoFaseChange.add(eq);
                     
                 }else if(pIni.equals("onF")){
                     
@@ -217,9 +225,9 @@ public class ProcessEquilibrioTermico {
                 }else if(pIni.equals("antV")){
                     
                     eq.c = new BigDecimal(e.getcLiquido());
-                    eq.t0 = tempIni;
+                    eq.tempIni = tempIni;
                     eq.m = m;
-                    qsfc.add(eq);
+                    listNoFaseChange.add(eq);
                     
                 }else if(pIni.equals("onV")){
                     
@@ -228,9 +236,9 @@ public class ProcessEquilibrioTermico {
                 }else if(pIni.equals("postV")){
                     
                     eq.c = new BigDecimal(e.getcGasoso());
-                    eq.t0 = tempIni;
+                    eq.tempIni = tempIni;
                     eq.m = m;
-                    qsfc.add(eq);
+                    listNoFaseChange.add(eq);
                     
                 }else{
                     
@@ -242,8 +250,27 @@ public class ProcessEquilibrioTermico {
         
         }
         
+        BigDecimal co1 = new BigDecimal(0);
+        BigDecimal co2 = new BigDecimal(0);
         
-        return null;
+        if(listComFaseChange.isEmpty()){
+            
+            for (eqNoFaseChange eq : listNoFaseChange) {
+                
+                co1 = co1.add(eq.m.multiply(eq.c.multiply(eq.tempIni)));
+                co2 = co2.add(eq.m.multiply(eq.c));
+
+            }
+            
+            return co1.divide(co2, precision, RoundingMode.UP);
+            
+        }else{
+            //se tiver mudanca de fase
+            //continua aqui
+            return null;
+            
+        }
+        
         
     }
     
@@ -277,17 +304,18 @@ public class ProcessEquilibrioTermico {
         
     }
     
-    public class eqSemFaseChange{
+    public class eqNoFaseChange{
         
         private BigDecimal m;
         private BigDecimal c;
-        private BigDecimal t0;
+        private BigDecimal tempIni;
         
     }
     
     public class eqComFaseChange{
         
-        
+        private BigDecimal m;
+        private BigDecimal tempIni;
         
     }
     

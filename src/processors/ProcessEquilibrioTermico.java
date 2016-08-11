@@ -151,7 +151,6 @@ public class ProcessEquilibrioTermico {
         List<eqComFaseChange> listComFaseChange = new ArrayList();
         for (ItensEquilibrioTermico iet : corpo) {
 
-            
             //pegando valores
             
             Elemento e = iet.getElemento();
@@ -265,6 +264,11 @@ public class ProcessEquilibrioTermico {
             return co1.divide(co2, precision, RoundingMode.UP);
             
         }else{
+           
+            
+            
+            
+           
             //se tiver mudanca de fase
             //continua aqui
             return null;

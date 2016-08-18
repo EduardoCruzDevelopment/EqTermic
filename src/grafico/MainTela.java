@@ -1,6 +1,7 @@
 
 package grafico;
 
+import database.Banco;
 import entidades.Elemento;
 import entidades.ItensEquilibrioTermico;
 import entidades.ItensQuantidadeCalor;

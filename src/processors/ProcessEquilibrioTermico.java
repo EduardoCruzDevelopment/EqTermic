@@ -346,6 +346,50 @@ public class ProcessEquilibrioTermico {
 
                 //identificar a energia cedida ao corpo
                 
+                String p = position(tempIni.doubleValue(),tempF.doubleValue(),tempV.doubleValue());
+                
+                BigDecimal energForChange = new BigDecimal(0);
+
+                if(p.equals("antF")){
+                    
+                    for (eqNoFaseChange eqNoChange : listNoFaseChange) {
+                       
+                        energForChange = energForChange.add(
+                                eqNoChange.m.multiply(
+                                        eqNoChange.c.multiply(
+                                                tempF.subtract(
+                                                        eqNoChange.tempIni))));
+                        
+                    }
+                    
+                    if(energForChange.compareTo(energToChange_s_f)==1){
+                        
+                        energToChange_f.add(energToChange_s_f);
+                        
+                        if(energForChange.compareTo(energToChange_f) == 1){
+                            //caso a energia seja suficiente para mudar a faze
+                        }else{
+                            //energia insuficiente para mudar a fase
+                        }
+                        
+                    }else{
+                        //nao tem mudança de fase
+                    }
+                    
+                }else if(p.equals("onF")){
+                    
+                    
+                    
+                }else if(p.equals("antV")){
+                    
+                }else if(p.equals("onV")){
+                    
+                }else if(p.equals("postV")){
+                    
+                }else{
+                    
+                }
+                
                 return null;
                 
             }
@@ -357,14 +401,12 @@ public class ProcessEquilibrioTermico {
         private BigDecimal m;
         private BigDecimal c;
         private BigDecimal tempIni;
-        
     }
     
     private class eqComFaseChange{
         private Elemento e;
         private BigDecimal m;
         private BigDecimal tempIni;
-        
     }
     
 }

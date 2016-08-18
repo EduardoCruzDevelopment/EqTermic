@@ -70,6 +70,36 @@ public class ProcessEquilibrioTermico {
 
     }
     
+    private BigDecimal defCapTermic(String pIni,Elemento e, Double cap) throws Exception {
+
+        if(pIni.equals("antF")){
+            
+            return new BigDecimal(cap/e.getcSolido());
+            
+        }else if(pIni.equals("onF")){
+            
+            throw new Exception("Impossível calcular a capacidade termica");
+                    
+        }else if(pIni.equals("antV")){
+            
+            return new BigDecimal(cap/e.getcLiquido());
+            
+        }else if(pIni.equals("onV")){
+            
+            throw new Exception("Impossível calcular a capacidade termica");
+            
+        }else if(pIni.equals("postV")){
+            
+            return new BigDecimal (cap/e.getcGasoso());
+            
+        }else{
+            
+            throw new Exception("Impossível calcular a capacidade termica");
+            
+        }
+        
+    }
+    
     private BigDecimal qtEnergToChangeFase(ItensEquilibrioTermico ie) throws Exception{
         
         System.out.println("Analisando quantidade de energia necessaria para mudar para a fase mais proxima.\n");
@@ -149,6 +179,7 @@ public class ProcessEquilibrioTermico {
                
         List<eqNoFaseChange> listNoFaseChange = new ArrayList();
         List<eqComFaseChange> listComFaseChange = new ArrayList();
+        
         for (ItensEquilibrioTermico iet : corpo) {
 
             //pegando valores
@@ -198,11 +229,12 @@ public class ProcessEquilibrioTermico {
 
             //pegando valores --- end
             
-            if(e.getcLiquido().equals(1)){
+            if(e.getcLiquido().equals(1.d)){
                 //é agua
                 eqComFaseChange eq = new eqComFaseChange();
                 eq.m = m;
                 eq.tempIni = tempIni;
+                eq.e = e;
                 listComFaseChange.add(eq);
                 
             }else{
@@ -215,6 +247,7 @@ public class ProcessEquilibrioTermico {
                     eq.c = new BigDecimal(e.getcSolido());
                     eq.tempIni = tempIni;
                     eq.m = m;
+                    eq.e = e;
                     listNoFaseChange.add(eq);
                     
                 }else if(pIni.equals("onF")){
@@ -226,6 +259,7 @@ public class ProcessEquilibrioTermico {
                     eq.c = new BigDecimal(e.getcLiquido());
                     eq.tempIni = tempIni;
                     eq.m = m;
+                    eq.e = e;
                     listNoFaseChange.add(eq);
                     
                 }else if(pIni.equals("onV")){
@@ -237,6 +271,7 @@ public class ProcessEquilibrioTermico {
                     eq.c = new BigDecimal(e.getcGasoso());
                     eq.tempIni = tempIni;
                     eq.m = m;
+                    eq.e = e;
                     listNoFaseChange.add(eq);
                     
                 }else{
@@ -265,59 +300,68 @@ public class ProcessEquilibrioTermico {
             
         }else{
            
-            
-            
-            
-           
-            //se tiver mudanca de fase
-            //continua aqui
-            return null;
-            
-        }
-        
-        
-    }
-    
-    private BigDecimal defCapTermic(String pIni,Elemento e, Double cap) throws Exception {
+            if(listComFaseChange.size()>1){
+                //selecionar agua com menor temperatura, e definir minimos para definir a qt de energina total cedida
+               throw new Exception("Exemplo nao tratado ainda");
 
-        if(pIni.equals("antF")){
-            
-            return new BigDecimal(cap/e.getcSolido());
-            
-        }else if(pIni.equals("onF")){
-            
-            throw new Exception("Impossível calcular a capacidade termica");
+            }else{
+                
+                eqComFaseChange eq = listComFaseChange.get(0);
+                
+                Elemento e = eq.e;
+                BigDecimal tempIni = eq.tempIni;
+                BigDecimal m = eq.m;
+                BigDecimal tempF = new BigDecimal (e.getTempF());
+                BigDecimal tempV = new BigDecimal (e.getTempV());
+                BigDecimal cs = new BigDecimal(e.getcSolido());
+                BigDecimal cl = new BigDecimal(e.getcLiquido());
+                BigDecimal cg = new BigDecimal(e.getcGasoso());
+                BigDecimal clf = new BigDecimal(e.getlFusao());
+                BigDecimal clv = new BigDecimal(e.getlVapor());
+                BigDecimal clfn = new BigDecimal(e.getlFusao()*-1);
+                BigDecimal clvn = new BigDecimal(e.getlVapor()*-1);
+                
+                //analisando energia necessaria para mudar de fase
+                BigDecimal energToChange_s_f = new BigDecimal(0);
+                BigDecimal energToChange_f = new BigDecimal(0);
+                BigDecimal energToChange_f_l = new BigDecimal(0);
+                BigDecimal energToChange_v = new BigDecimal(0);
+                
+                energToChange_s_f = m.multiply(cs.multiply(tempF.subtract(tempIni)));
                     
-        }else if(pIni.equals("antV")){
-            
-            return new BigDecimal(cap/e.getcLiquido());
-            
-        }else if(pIni.equals("onV")){
-            
-            throw new Exception("Impossível calcular a capacidade termica");
-            
-        }else if(pIni.equals("postV")){
-            
-            return new BigDecimal (cap/e.getcGasoso());
-            
-        }else{
-            
-            throw new Exception("Impossível calcular a capacidade termica");
-            
+                if(tempIni.doubleValue() >= tempF.doubleValue()){
+                    energToChange_f = m.multiply(clfn);
+                }else{
+                    energToChange_f = m.multiply(clf);
+                }
+                        
+                energToChange_s_f = m.multiply(cl.multiply(tempV.subtract(tempF)));
+                    
+                if(tempIni.doubleValue() >= tempV.doubleValue()){
+                    energToChange_v = m.multiply(clvn);
+                }else{
+                    energToChange_v = m.multiply(clv);
+                }
+                //fim da analisa de energia necessaria para a mudanca de fase
+
+                //identificar a energia cedida ao corpo
+                
+                return null;
+                
+            }
         }
-        
     }
     
-    public class eqNoFaseChange{
-        
+    private class eqNoFaseChange{
+        private Elemento e;
         private BigDecimal m;
         private BigDecimal c;
         private BigDecimal tempIni;
         
     }
     
-    public class eqComFaseChange{
-        
+    private class eqComFaseChange{
+        private Elemento e;
         private BigDecimal m;
         private BigDecimal tempIni;
         

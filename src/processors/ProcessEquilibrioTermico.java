@@ -284,8 +284,11 @@ public class ProcessEquilibrioTermico {
         
         }
         
+        //fim da classificacao das listas
+        
         BigDecimal co1 = new BigDecimal(0);
         BigDecimal co2 = new BigDecimal(0);
+        BigDecimal f = new BigDecimal(0);
         
         if(listComFaseChange.isEmpty()){
             
@@ -344,7 +347,7 @@ public class ProcessEquilibrioTermico {
                 }
                 //fim da analisa de energia necessaria para a mudanca de fase
 
-                //identificar a energia cedida ao corpo
+                //identificar a energia cedida ao corpo e separar equacoes
                 
                 String p = position(tempIni.doubleValue(),tempF.doubleValue(),tempV.doubleValue());
                 
@@ -362,24 +365,71 @@ public class ProcessEquilibrioTermico {
                         
                     }
                     
-                    if(energForChange.compareTo(energToChange_s_f)==1){
+                    if(energForChange.add(energToChange_s_f).doubleValue() < 0.d){ // energiaNecessaria+energiaCedida < 0
                         
-                        energToChange_f.add(energToChange_s_f);
+                        //deu toda energia necessaria e sobro um pouco
                         
-                        if(energForChange.compareTo(energToChange_f) == 1){
+                        energToChange_f.add(energToChange_s_f); //somando a energia a mudança de fase
+                        
+                        if(energForChange.add(energToChange_f).doubleValue() < 0.d){
                             //caso a energia seja suficiente para mudar a faze
+                            
+                            for (eqNoFaseChange eqNoChange : listNoFaseChange) {//verificando energia da temp inicial ate a temp de vaporizacao
+                       
+                                energForChange = energForChange.add(
+                                        eqNoChange.m.multiply(
+                                                eqNoChange.c.multiply(
+                                                        tempV.subtract(
+                                                                eqNoChange.tempIni))));
+                        
+                            }
+                            
+                            energToChange_f.add(energToChange_f_l);
+                            
+                            if(energForChange.add(energToChange_f).doubleValue() < 0.d){
+                                //verificar se tem energia suficiente para fazer a evaporacao
+                                //considerar todos os estagios da agua incluindo a vaporizacao completa
+                                
+                                
+                            }else if(energForChange.add(energToChange_f).doubleValue() == 0.d){
+                                //tem energia necessaria para chegar a evaporacao
+                                //considerar apenas ate a mudancao de fase incluindo vaporizacao
+                            }else if(energForChange.add(energToChange_f).doubleValue() > 0.d){
+                                //nao tem energia necessaria para chegar a evaporacao
+                                //considerar apenas estado liquido
+                                
+                            }else{
+                                throw new Exception("falha geral");
+                            }
+                            
+                        }else if(energForChange.add(energToChange_f).doubleValue() == 0.d){
+                            
+                            //energia suficiente para chegar a 0 porem insulficiente para mudar de fase
+                            //considerar a mudanca de fase
+                        }else if(energForChange.add(energToChange_f).doubleValue() > 0.d){
+                            
+                            //nao considerar a mudanca de fase
+                            
                         }else{
-                            //energia insuficiente para mudar a fase
+                            throw new Exception("falha geral");
                         }
                         
-                    }else{
+                    }else if(energForChange.add(energToChange_s_f).doubleValue() == 0.d){ // energiaNecessaria+energiaCedida = 0
+                        //energia insuficiente para mudar de fase
                         //nao tem mudança de fase
+                    
+                    
+                    }else if(energForChange.add(energToChange_s_f).doubleValue() > 0.d){ // energiaNecessaria+energiaCedida > 0
+                        //energia insuficiente para chegar a mudar de fase
+                        
+                    }else{
+                        throw new Exception("falha geral");
                     }
                     
                 }else if(p.equals("onF")){
                     
                     
-                    
+
                 }else if(p.equals("antV")){
                     
                 }else if(p.equals("onV")){
@@ -387,7 +437,7 @@ public class ProcessEquilibrioTermico {
                 }else if(p.equals("postV")){
                     
                 }else{
-                    
+                    throw new Exception("falha geral");
                 }
                 
                 return null;

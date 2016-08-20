@@ -1,7 +1,6 @@
 
 package grafico;
 
-import database.Banco;
 import entidades.Elemento;
 import entidades.ItensEquilibrioTermico;
 import entidades.ItensQuantidadeCalor;
@@ -9,7 +8,6 @@ import grafico.conversores.ConverEnerg;
 import grafico.conversores.ConverMassa;
 import grafico.conversores.ConverTemp;
 import java.awt.Toolkit;
-
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JOptionPane;
@@ -326,25 +324,21 @@ public class MainTela extends javax.swing.JFrame {
                             .addComponent(jLabel5)
                             .addComponent(qcTxtTempFinPow, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(qcCombTempFin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGroup(qcPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(qcPanelLayout.createSequentialGroup()
-                                .addGap(9, 9, 9)
-                                .addGroup(qcPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(qcRadBtMassa)
-                                    .addComponent(qcRadBtCapTermic))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addGroup(qcPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(qcTxtMassa, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLabel7)
-                                    .addComponent(qcTxtMassaPow, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(qcCombMassa, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 50, Short.MAX_VALUE)
-                                .addGroup(qcPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(qcButCalc, javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(qcButLimpar, javax.swing.GroupLayout.Alignment.TRAILING)))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, qcPanelLayout.createSequentialGroup()
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(qcButAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addGap(9, 9, 9)
+                        .addGroup(qcPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(qcRadBtMassa)
+                            .addComponent(qcRadBtCapTermic))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(qcPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(qcTxtMassa, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel7)
+                            .addComponent(qcTxtMassaPow, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(qcCombMassa, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 50, Short.MAX_VALUE)
+                        .addGroup(qcPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(qcButCalc, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(qcButLimpar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(qcButAdd, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                     .addComponent(jScrollPane2))
                 .addContainerGap())
         );
@@ -533,10 +527,10 @@ public class MainTela extends javax.swing.JFrame {
                             .addComponent(etTxtMassaPow, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(etCombMassa, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGroup(etPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(etButCalc, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(etButLimpar, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(etButAdd, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGroup(etPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(etButCalc, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(etButLimpar, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(etButAdd, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                     .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 409, Short.MAX_VALUE))
                 .addContainerGap())
         );
@@ -662,7 +656,6 @@ public class MainTela extends javax.swing.JFrame {
     
     
     //qcAction - ini
-    
     
     private void qcRadBtCapTermicActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_qcRadBtCapTermicActionPerformed
         qcCombMassa.setEnabled(false);
@@ -921,8 +914,7 @@ public class MainTela extends javax.swing.JFrame {
     //qcAction - end
     
     //etAction - ini
-    
-    
+        
     private void etButProcurarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_etButProcurarActionPerformed
        System.out.println("Pesquisa de elemento");
         PesqElement pq = new PesqElement(null,true);
@@ -935,7 +927,17 @@ public class MainTela extends javax.swing.JFrame {
     }//GEN-LAST:event_etButProcurarActionPerformed
 
     private void etButCalcActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_etButCalcActionPerformed
-        System.out.println("No Action!\n\n\n");
+       
+        if(etLista.size()>1){
+            
+            
+            
+        }else{
+            
+            JOptionPane.showMessageDialog(null, "Adicione ao menos dois corpos a tabela!","InternalSystem", JOptionPane.ERROR_MESSAGE);
+            
+        }
+
     }//GEN-LAST:event_etButCalcActionPerformed
 
     private void etButAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_etButAddActionPerformed
@@ -1143,8 +1145,7 @@ public class MainTela extends javax.swing.JFrame {
         }
     
     }
-    
-        
+      
     //etAction - end
 
     public static void main(String args[]) {

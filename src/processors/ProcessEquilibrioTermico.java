@@ -338,152 +338,56 @@ public class ProcessEquilibrioTermico {
                 throw new Exception("Exemplo nao tratado ainda");
 
             }else{
-                System.out.println("Apenas uma agua identificada");
                 
-                System.out.println("Pegando agua da lista");
-                eqComFaseChange eq = listComFaseChange.get(0);
-                System.out.println("Pegando valores");
+                eqComFaseChange eq = listComFaseChange.get(1);
                 Elemento e = eq.e;
                 BigDecimal tempIni = eq.tempIni;
                 BigDecimal m = eq.m;
-                BigDecimal tempF = new BigDecimal (e.getTempF());
-                BigDecimal tempV = new BigDecimal (e.getTempV());
                 BigDecimal cs = new BigDecimal(e.getcSolido());
                 BigDecimal cl = new BigDecimal(e.getcLiquido());
-                BigDecimal cg = new BigDecimal(e.getcGasoso());
+                BigDecimal cv = new BigDecimal(e.getcSolido());
                 BigDecimal clf = new BigDecimal(e.getlFusao());
-                BigDecimal clv = new BigDecimal(e.getlVapor());
                 BigDecimal clfn = new BigDecimal(e.getlFusao()*-1);
+                BigDecimal clv = new BigDecimal(e.getlVapor());
                 BigDecimal clvn = new BigDecimal(e.getlVapor()*-1);
+                BigDecimal tempF = new BigDecimal(e.getTempF());
+                BigDecimal tempV = new BigDecimal(e.getTempV());
                 
-                //analisando energia necessaria para mudar de fase
-                System.out.println("Inicio da analise de energia necessaria");
-                BigDecimal energToChange_s_f = new BigDecimal(0);
-                BigDecimal energToChange_f = new BigDecimal(0);
-                BigDecimal energToChange_f_l = new BigDecimal(0);
-                BigDecimal energToChange_v = new BigDecimal(0);
-                
-                energToChange_s_f = m.multiply(cs.multiply(tempF.subtract(tempIni)));
-                    
-                if(tempIni.doubleValue() >= tempF.doubleValue()){
-                    energToChange_f = m.multiply(clfn);
-                }else{
-                    energToChange_f = m.multiply(clf);
-                }
-                        
-                energToChange_s_f = m.multiply(cl.multiply(tempV.subtract(tempF)));
-                    
-                if(tempIni.doubleValue() >= tempV.doubleValue()){
-                    energToChange_v = m.multiply(clvn);
-                }else{
-                    energToChange_v = m.multiply(clv);
-                }
-                System.out.println("energToChange_s_f: "+energToChange_s_f.toString());
-                System.out.println("energToChange_f: "+energToChange_f.toString());
-                System.out.println("energToChange_s_f: "+energToChange_s_f.toString());
-                System.out.println("energToChange_v "+energToChange_v.toString());
-                System.out.println("Fim da analise\n");
-                //fim da analisa de energia necessaria para a mudanca de fase
-
-                //identificar a energia cedida ao corpo e separar equacoes
-                
-                String p = position(tempIni.doubleValue(),tempF.doubleValue(),tempV.doubleValue());
-                System.out.println("Posicao inicial da agua ---"+p);
-                BigDecimal energForChange = new BigDecimal(0);
+                String p = position(tempIni.doubleValue(),e.getTempF(),e.getTempV());
                 
                 if(p.equals("antF")){
-                    System.out.println("Identificacao de gelo");
-                    for (eqNoFaseChange eqNoChange : listNoFaseChange) {
-                       
-                        energForChange = energForChange.add(
-                                eqNoChange.m.multiply(
-                                        eqNoChange.c.multiply(
-                                                tempF.subtract(
-                                                        eqNoChange.tempIni))));
-                        
-                    }
                     
-                    System.out.println("Energia cedida ate a fusao: "+energForChange.toString());
-                    System.out.println("Energia restante ate a mudança de fase: "+energForChange.add(energToChange_s_f).toString());
+                    BigDecimal energForFusion = new BigDecimal(0);
+                    BigDecimal energForVaporate = new BigDecimal(0);
+                    BigDecimal energCedida_f = new BigDecimal(0);
+                    BigDecimal energCedida_v = new BigDecimal(0);
+                    BigDecimal mid = new BigDecimal(0);
+                    energForFusion = m.multiply(cs.multiply(tempF.subtract(tempIni)));
                     
-                    if(energForChange.add(energToChange_s_f).doubleValue() < 0.d){ // energiaNecessaria+energiaCedida < 0
-                        System.out.println("Energia necessaria para mudança de fase");
-                       
-                        //deu toda energia necessaria e sobro um pouco
+                    energCedida_f = qtEnergiaCedida(listNoFaseChange,tempF);
+                    energCedida_v = qtEnergiaCedida(listNoFaseChange,tempV);
+                    mid = energForFusion.add(energCedida_f);
+                    
+                    if(mid.doubleValue()<0){
+                        //tem energia pra chegar a mudanca de fase
+                        energForFusion = energForFusion.add(m.multiply(clv));
                         
-                        energToChange_f.add(energToChange_s_f); //somando a energia a mudança de fase
-                        System.out.println("Energia necessaria para a mudança de fase: "+energToChange_f.toString());
-                        System.out.println("Energia restante: "+energForChange.add(energToChange_f).toString());
+                        mid = energForFusion.add(energCedida_f);
                         
-                        if(energForChange.add(energToChange_f).doubleValue() < 0.d){
-                            System.out.println("Energia suficiente para mudar de fase");
-                            //caso a energia seja suficiente para mudar a faze
-                            System.out.println("Iniciando analise de energia para mudança de fase ate a vaporisacao");
-                            for (eqNoFaseChange eqNoChange : listNoFaseChange){//verificando energia da temp inicial ate a temp de vaporizacao
-                       
-                                energForChange = energForChange.add(
-                                        eqNoChange.m.multiply(
-                                                eqNoChange.c.multiply(
-                                                        tempV.subtract(
-                                                                eqNoChange.tempIni))));
-                        
-                            }
+                        if(mid.doubleValue()<0){
+                            f = f.add(m.multiply(clf));
                             
-                            System.out.println("energia disponivel: "+energForChange.toString());
+                            energForVaporate = m.multiply(cl.multiply(tempV.subtract(tempF)));
+                            //fazer a mesma analise de cima
                             
-                            energToChange_f.add(energToChange_f_l);
-                            System.out.println("Energia necessaria para a mudança de fase:"+energToChange_f.toString());
-                            System.out.println("Energia restante"+energForChange.add(energToChange_f).toString());
-                            
-                            if(energForChange.add(energToChange_f).doubleValue() < 0.d){
-                                System.out.println("Energia necessaria para a evaporacao");
-                                
-                                //verificar se tem energia suficiente para fazer a evaporacao
-                                //considerar todos os estagios da agua incluindo a vaporizacao completa
-                                    
-                            }else if(energForChange.add(energToChange_f).doubleValue() == 0.d){
-                                System.out.println("Energia necessaria para chegar a evaporacao");
-                                //tem energia necessaria para chegar a evaporacao
-                                //considerar apenas ate a mudancao de fase incluindo vaporizacao
-                            }else if(energForChange.add(energToChange_f).doubleValue() > 0.d){
-                                System.out.println("Energia insufiente para chegar a evaporacao");
-                                //nao tem energia necessaria para chegar a evaporacao
-                                //considerar apenas estado liquido
-                            }else{
-                                throw new Exception("falha geral");
-                            }
-                            
-                        }else if(energForChange.add(energToChange_f).doubleValue() == 0.d){
-                            System.out.println("Energia suficiente para chegar na mudanca de fase");
-                            //energia suficiente para chegar a 0 porem insulficiente para mudar de fase
-                            //considerar a mudanca de fase
-                        }else if(energForChange.add(energToChange_f).doubleValue() > 0.d){
-                            System.out.println("enegiar insuficiente para mudar de fase");
-                            //nao considerar a mudanca de fase
-                            
-                        }else{
-                            throw new Exception("falha geral");
                         }
                         
-                    }else if(energForChange.add(energToChange_s_f).doubleValue() == 0.d){ // energiaNecessaria+energiaCedida = 0
-                        System.out.println("Energia suficnete para chegar a mudança de fase");
-                        //energia insuficiente para mudar de fase
-                        //nao tem mudança de fase
-                    
-                    
-                    }else if(energForChange.add(energToChange_s_f).doubleValue() > 0.d){ // energiaNecessaria+energiaCedida > 0
-                        System.out.println("Energia insufiente para chegar a mudança de fase");
-                        //energia insuficiente para chegar a mudar de fase
-                        
                     }else{
-                        System.out.println("Erro!!!");
-                        throw new Exception("falha geral");
+                        //nao tem energia pra chegar a mudanca de fase
                     }
                     
                 }else if(p.equals("onF")){
                     
-                    
-
                 }else if(p.equals("antV")){
                     
                 }else if(p.equals("onV")){
@@ -491,7 +395,7 @@ public class ProcessEquilibrioTermico {
                 }else if(p.equals("postV")){
                     
                 }else{
-                    throw new Exception("falha geral");
+                    throw new Exception("Falha geral!");
                 }
                 
                 return null;
@@ -511,6 +415,19 @@ public class ProcessEquilibrioTermico {
         private Elemento e;
         private BigDecimal m;
         private BigDecimal tempIni;
+    }
+        
+    private BigDecimal qtEnergiaCedida(List<eqNoFaseChange> eqs,BigDecimal tempF){
+        
+        BigDecimal energ = new BigDecimal(0);
+        
+        for (eqNoFaseChange eq : eqs) {
+                
+            energ = energ.add(eq.m.multiply(eq.c.multiply(tempF.subtract(eq.tempIni))));
+    
+        }
+        
+        return energ;
     }
     
 }

@@ -310,9 +310,11 @@ public class ProcessEquilibrioTermico {
         
         System.out.println("Iniciando calculo");
         
+        //equacao principal
         BigDecimal co1 = new BigDecimal(0);
         BigDecimal co2 = new BigDecimal(0);
         BigDecimal f = new BigDecimal(0);
+        //equacao principal
         
         if(listComFaseChange.isEmpty()){ 
             System.out.println("Nao detectado a existencia de agua no sistema...");
@@ -355,17 +357,22 @@ public class ProcessEquilibrioTermico {
                 
                 String p = position(tempIni.doubleValue(),e.getTempF(),e.getTempV());
                 
+                //estudo de fases...
+                
+                BigDecimal energForFusion = new BigDecimal(0);
+                BigDecimal energForVaporate = new BigDecimal(0);
+                BigDecimal energCedida_f = new BigDecimal(0);
+                BigDecimal energCedida_v = new BigDecimal(0);
+                BigDecimal mid = new BigDecimal(0);
+                
+                
                 if(p.equals("antF")){
-                    
-                    BigDecimal energForFusion = new BigDecimal(0);
-                    BigDecimal energForVaporate = new BigDecimal(0);
-                    BigDecimal energCedida_f = new BigDecimal(0);
-                    BigDecimal energCedida_v = new BigDecimal(0);
-                    BigDecimal mid = new BigDecimal(0);
-                    energForFusion = m.multiply(cs.multiply(tempF.subtract(tempIni)));
+
+                    energForFusion = m.multiply(cs.multiply(tempF.subtract(tempIni))).add(m.multiply(clf));
+                    energForVaporate = m.multiply(cl.multiply(tempV.subtract(tempF))).add(m.multiply(clv));
                     
                     energCedida_f = qtEnergiaCedida(listNoFaseChange,tempF);
-                    energCedida_v = qtEnergiaCedida(listNoFaseChange,tempV).add(m.multiply(clf));
+                    energCedida_v = qtEnergiaCedida(listNoFaseChange,tempV);
                     mid = energForFusion.add(energCedida_f);
                     
                     if(mid.doubleValue()<0){
@@ -373,17 +380,53 @@ public class ProcessEquilibrioTermico {
                         f = f.add(m.multiply(clf));//adicionando mudanca de fase a equacao geral
                         
                         //iniciando alanise da vaporizacao
-                        energForVaporate = m.multiply(cl.multiply(tempV.subtract(tempF))).add(m.multiply(clv));
                         mid = energForVaporate.add(energCedida_v);
                         
                         if(mid.doubleValue()<0){   
-                            //fazer a mesma analise de cima
-                            f = f.add(m.multiply(clv));
+                            //teve energia suficiente para passar da vaporizacao
+                            f = f.add(m.multiply(clv));//adicionando mudanca de fase a equacao geral
                         }    
                         
                     }
                     
                 }else if(p.equals("onF")){
+                    
+                    energCedida_f = qtEnergiaCedida(listNoFaseChange,tempF);
+                    
+                    if(energCedida_f.doubleValue() > 0){ //energia cedida e positiva
+                    
+                        energForFusion = m.multiply(clfn); //energia necessaria para transformar para solido
+                        
+                        mid = energForFusion.add(energCedida_f);
+                        
+                        if(mid.doubleValue()>0){
+                            //energia suficiente para passar a mudanca de fase
+                            f = f.add(m.multiply(clfn));//adicionando mudanca de fase a equacao geral
+                        }
+  
+                    }else{
+                        
+                        energForFusion = m.multiply(clf); //energia necessaria para transformar para liquido
+                        
+                        mid = energForFusion.add(energCedida_f);
+                        
+                        if(mid.doubleValue()<0){
+                            //energia suficiente para passar a mudanca de fase
+                            f = f.add(m.multiply(clf));//adicionando mudanca de fase a equacao geral
+                            
+                            energCedida_v = qtEnergiaCedida(listNoFaseChange,tempV);
+                            energForVaporate = m.multiply(cl.multiply(tempV.subtract(tempF))).add(m.multiply(clv));
+                            
+                            mid = energForVaporate.add(energCedida_v);
+                            
+                            if(mid.doubleValue()<0){
+                                //energia suficiente para passar a mudanca de fase
+                                f = f.add(m.multiply(clv));//adicionando mudanca de fase a equacao geral
+                            }
+                        
+                        }
+                        
+                    }
                     
                 }else if(p.equals("antV")){
                     
@@ -395,6 +438,8 @@ public class ProcessEquilibrioTermico {
                     throw new Exception("Falha geral!");
                 }
                 
+                //fim do estudo de fases
+
                 return null;
                 
             }

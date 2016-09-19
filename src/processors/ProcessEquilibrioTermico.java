@@ -365,25 +365,22 @@ public class ProcessEquilibrioTermico {
                     energForFusion = m.multiply(cs.multiply(tempF.subtract(tempIni)));
                     
                     energCedida_f = qtEnergiaCedida(listNoFaseChange,tempF);
-                    energCedida_v = qtEnergiaCedida(listNoFaseChange,tempV);
+                    energCedida_v = qtEnergiaCedida(listNoFaseChange,tempV).add(m.multiply(clf));
                     mid = energForFusion.add(energCedida_f);
                     
                     if(mid.doubleValue()<0){
-                        //tem energia pra chegar a mudanca de fase
-                        energForFusion = energForFusion.add(m.multiply(clv));
+                        //tem energia para passar da mudanca de fase
+                        f = f.add(m.multiply(clf));//adicionando mudanca de fase a equacao geral
                         
-                        mid = energForFusion.add(energCedida_f);
+                        //iniciando alanise da vaporizacao
+                        energForVaporate = m.multiply(cl.multiply(tempV.subtract(tempF))).add(m.multiply(clv));
+                        mid = energForVaporate.add(energCedida_v);
                         
-                        if(mid.doubleValue()<0){
-                            f = f.add(m.multiply(clf));
-                            
-                            energForVaporate = m.multiply(cl.multiply(tempV.subtract(tempF)));
+                        if(mid.doubleValue()<0){   
                             //fazer a mesma analise de cima
-                            
-                        }
+                            f = f.add(m.multiply(clv));
+                        }    
                         
-                    }else{
-                        //nao tem energia pra chegar a mudanca de fase
                     }
                     
                 }else if(p.equals("onF")){

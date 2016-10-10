@@ -375,14 +375,14 @@ public class ProcessEquilibrioTermico {
                     energCedida_v = qtEnergiaCedida(listNoFaseChange,tempV);
                     mid = energForFusion.add(energCedida_f);
                     
-                    if(mid.doubleValue()<0){
+                    if(mid.doubleValue()<=0){
                         //tem energia para passar da mudanca de fase
                         f = f.add(m.multiply(clf));//adicionando mudanca de fase a equacao geral
                         
                         //iniciando alanise da vaporizacao
                         mid = energForVaporate.add(energCedida_v);
                         
-                        if(mid.doubleValue()<0){   
+                        if(mid.doubleValue()<=0){   
                             //teve energia suficiente para passar da vaporizacao
                             f = f.add(m.multiply(clv));//adicionando mudanca de fase a equacao geral
                         }    
@@ -397,7 +397,7 @@ public class ProcessEquilibrioTermico {
                     
                         energForFusion = m.multiply(clfn); //energia necessaria para transformar para solido
                         
-                        mid = energForFusion.add(energCedida_f);
+                        mid = energForFusion.add(energCedida_f); // -----------------------------------------na verdade eu preciso saver o estado fisico para definir essa caracteruisca
                         
                         if(mid.doubleValue()>0){
                             //energia suficiente para passar a mudanca de fase
@@ -429,6 +429,8 @@ public class ProcessEquilibrioTermico {
                     }
                     
                 }else if(p.equals("antV")){
+                    
+                    
                     
                 }else if(p.equals("onV")){
                     

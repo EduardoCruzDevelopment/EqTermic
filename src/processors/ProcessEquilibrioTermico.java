@@ -359,82 +359,129 @@ public class ProcessEquilibrioTermico {
                 
                 //estudo de fases...
                 
-                BigDecimal energForFusion = new BigDecimal(0);
-                BigDecimal energForVaporate = new BigDecimal(0);
-                BigDecimal energCedida_f = new BigDecimal(0);
-                BigDecimal energCedida_v = new BigDecimal(0);
-                BigDecimal mid = new BigDecimal(0);
-                
-                
-                if(p.equals("antF")){
 
-                    energForFusion = m.multiply(cs.multiply(tempF.subtract(tempIni))).add(m.multiply(clf));
-                    energForVaporate = m.multiply(cl.multiply(tempV.subtract(tempF))).add(m.multiply(clv));
+                if(p.equals("antF")){
                     
-                    energCedida_f = qtEnergiaCedida(listNoFaseChange,tempF);
+                    BigDecimal energForFusion = new BigDecimal(0);
+                    BigDecimal energForVaporate = new BigDecimal(0);
+                    BigDecimal energCedida_f = new BigDecimal(0);
+                    BigDecimal energCedida_v = new BigDecimal(0);
+                    BigDecimal mid = new BigDecimal(0);
+                    
+                    energForFusion = m.multiply(cs.multiply(tempF.subtract(tempIni))).add(m.multiply(clf)); //valor positivo
+                    energForVaporate = m.multiply(cl.multiply(tempV.subtract(tempF))).add(m.multiply(clv)); //valor positivo
+                    
+                    energCedida_f = qtEnergiaCedida(listNoFaseChange,tempF); //verificar se esse valor é + ou - 
                     energCedida_v = qtEnergiaCedida(listNoFaseChange,tempV);
-                    mid = energForFusion.add(energCedida_f);
+                    mid = energForFusion.add(energCedida_f);//se maior que 0 muda de fase, se menor, nao muda
                     
-                    if(mid.doubleValue()<=0){
+                    if(mid.doubleValue()==0){
                         //tem energia para passar da mudanca de fase
+                        
+                        co1 = co1.add(m.multiply(cs.multiply(tempIni)));
+                        co2 = co2.add(m.multiply(cs));
                         f = f.add(m.multiply(clf));//adicionando mudanca de fase a equacao geral
+                         
+                    }else if(mid.doubleValue()<=0){
+                    
+                        co1 = co1.add(m.multiply(cs.multiply(tempIni)));//adicionando fase solida
+                        co2 = co2.add(m.multiply(cs));//adicionando fase solida
+                        f = f.add(m.multiply(clf));//adicionando mudanca de fase a equacao geral
+                        
+                        co1 = co1.add(m.multiply(cl.multiply(tempF)));//adicionando fase liquida
+                        co2 = co2.add(m.multiply(cl));//adicionando fase liquida
                         
                         //iniciando alanise da vaporizacao
                         mid = energForVaporate.add(energCedida_v);
                         
                         if(mid.doubleValue()<=0){   
                             //teve energia suficiente para passar da vaporizacao
+                          
                             f = f.add(m.multiply(clv));//adicionando mudanca de fase a equacao geral
-                        }    
+                            co1 = co1.add(m.multiply(cv.multiply(tempV)));//adicionando fase gasosa
+                            co2 = co2.add(m.multiply(cv));//adicionando fase gasosa
+                        
+                        }   
+                    
+                    }else{
+                        
+                        co1 = co1.add(m.multiply(cs.multiply(tempIni)));
+                        co2 = co2.add(m.multiply(cs));
                         
                     }
                     
                 }else if(p.equals("onF")){
                     
-                    energCedida_f = qtEnergiaCedida(listNoFaseChange,tempF);
-                    
-                    if(energCedida_f.doubleValue() > 0){ //energia cedida e positiva
-                    
-                        energForFusion = m.multiply(clfn); //energia necessaria para transformar para solido
-                        
-                        mid = energForFusion.add(energCedida_f); // -----------------------------------------na verdade eu preciso saver o estado fisico para definir essa caracteruisca
-                        
-                        if(mid.doubleValue()>0){
-                            //energia suficiente para passar a mudanca de fase
-                            f = f.add(m.multiply(clfn));//adicionando mudanca de fase a equacao geral
-                        }
-  
-                    }else{
-                        
-                        energForFusion = m.multiply(clf); //energia necessaria para transformar para liquido
-                        
-                        mid = energForFusion.add(energCedida_f);
-                        
-                        if(mid.doubleValue()<0){
-                            //energia suficiente para passar a mudanca de fase
-                            f = f.add(m.multiply(clf));//adicionando mudanca de fase a equacao geral
-                            
-                            energCedida_v = qtEnergiaCedida(listNoFaseChange,tempV);
-                            energForVaporate = m.multiply(cl.multiply(tempV.subtract(tempF))).add(m.multiply(clv));
-                            
-                            mid = energForVaporate.add(energCedida_v);
-                            
-                            if(mid.doubleValue()<0){
-                                //energia suficiente para passar a mudanca de fase
-                                f = f.add(m.multiply(clv));//adicionando mudanca de fase a equacao geral
-                            }
-                        
-                        }
-                        
-                    }
-                    
+                    throw new Exception("intervalo indeterminado por temperatura");
+                                        
                 }else if(p.equals("antV")){
                     
                     
+                    //falta aquiiiii
                     
                 }else if(p.equals("onV")){
                     
+                    throw new Exception("intervalo indeterminado por temperatura");
+                    
                 }else if(p.equals("postV")){
+                    
+                    BigDecimal energForSolid = new BigDecimal(0);
+                    BigDecimal energForLiquid = new BigDecimal(0);
+                    BigDecimal energCedida_f = new BigDecimal(0);
+                    BigDecimal energCedida_v = new BigDecimal(0);
+                    BigDecimal mid = new BigDecimal(0);
+                    
+                    energForLiquid = m.multiply(cv.multiply(tempV.subtract(tempIni))).add(m.multiply(clvn)); //valor negativo
+                    energForSolid = m.multiply(cl.multiply(tempF.subtract(tempV))).add(m.multiply(clfn)); //valor negativo
+                    
+                    energCedida_v = qtEnergiaCedida(listNoFaseChange,tempV); 
+                    energCedida_f = qtEnergiaCedida(listNoFaseChange,tempF);
+                    
+                    if(energCedida_v.doubleValue()>0){
+                        //a agua pode mudar de fase
+                        
+                        mid = energCedida_v.add(energForLiquid);
+                        
+                        if(mid.doubleValue()==0){
+                            
+                            co1 = co1.add(m.multiply(cv.multiply(tempIni)));//adicionando fase gasosa
+                            co2 = co2.add(m.multiply(cv));//adicionando fase gasosa
+                            f = f.add(m.multiply(clvn));//adicionando mudanca de fase a equacao geral
+                            
+                        }else if(mid.doubleValue()>0){
+                            
+                            co1 = co1.add(m.multiply(cv.multiply(tempIni)));//adicionando fase gasosa
+                            co2 = co2.add(m.multiply(cv));//adicionando fase gasosa
+                            f = f.add(m.multiply(clvn));//adicionando mudanca de fase a equacao geral
+                            
+                            co1 = co1.add(m.multiply(cl.multiply(tempV)));//adicionando fase liquida
+                            co2 = co2.add(m.multiply(cl));//adicionando fase liquida
+                            
+                            if(energCedida_f.doubleValue()>0){
+                                //continua mudando de fase
+                                
+                                mid = energCedida_f.add(energForSolid);
+                                
+                                if(mid.doubleValue()==0){
+                                    f = f.add(m.multiply(clfn));//adicionando mudanca de fase a equacao geral
+                                }else if(mid.doubleValue()>0){
+                                    co1 = co1.add(m.multiply(cs.multiply(tempF)));//adicionando fase solida
+                                    co2 = co2.add(m.multiply(cs));//adicionando fase solida
+                                    f = f.add(m.multiply(clfn));//adicionando mudanca de fase a equacao geral
+                                }
+                           
+                            }
+                            
+                        }else{
+                            co1 = co1.add(m.multiply(cv.multiply(tempIni)));//adicionando fase gasosa
+                            co2 = co2.add(m.multiply(cv));//adicionando fase gasosa
+                        }
+ 
+                    }else{
+                        //a agua nao pode mudar de fase
+                        co1 = co1.add(m.multiply(cv.multiply(tempIni)));//adicionando fase gasosa
+                        co2 = co2.add(m.multiply(cv));//adicionando fase gasosa
+                    }
                     
                 }else{
                     throw new Exception("Falha geral!");

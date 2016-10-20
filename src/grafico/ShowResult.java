@@ -31,6 +31,17 @@ public class ShowResult extends javax.swing.JDialog {
                 combConv.setSelectedIndex(0);
                 break;      
         
+            case "et":
+                
+                this.titulo = "Temperatura de equilibrio térmico:";
+                this.unidade = "°C";
+                this.tipe = tipe;
+                initComponents();
+                txt.setText(r.toString());
+                combConv.addItem("°F");
+                combConv.addItem("K");
+                combConv.setSelectedIndex(0);                
+                break;
         }
         
     }
@@ -140,10 +151,26 @@ public class ShowResult extends javax.swing.JDialog {
                         lUnidad.setText(uni);
                     
                     }catch(Exception e){
-                
+                        System.err.println(e.getMessage());
                     }
                 
-                    break;      
+                    break;
+                    
+                case "et":
+                    
+                    try{
+                    
+                        Double entrada = Double.parseDouble(txt.getText());         
+                        String uni = (String) combConv.getSelectedItem();
+                        Conversores c = new Conversores();
+                        txt.setText(c.temperatura("°C",uni,entrada).toString());
+                        lUnidad.setText(uni);
+                    
+                    }catch(Exception e){
+                        System.err.println(e.getMessage());
+                    }
+                    
+                    break;
         
             }
         }

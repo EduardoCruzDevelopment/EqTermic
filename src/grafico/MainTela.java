@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
+import processors.ProcessEquilibrioTermico;
 import util.Conversores;
 import util.JtextFieldNumbers;
 import processors.ProcessQuantidadeCalor;
@@ -930,7 +931,15 @@ public class MainTela extends javax.swing.JFrame {
        
         if(etLista.size()>1){
             
-            
+            try{
+                ProcessEquilibrioTermico pet = new ProcessEquilibrioTermico(precisao);
+                ShowResult sr = new ShowResult(null, true,"et",pet.calc(etLista));
+                sr.setLocationRelativeTo(null);
+                sr.setVisible(true);
+                etClear("full");
+            }catch(Exception e){
+                System.err.println(e.getMessage());
+            }
             
         }else{
             

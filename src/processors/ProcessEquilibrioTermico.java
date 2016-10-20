@@ -365,14 +365,12 @@ public class ProcessEquilibrioTermico {
                     BigDecimal energForFusion = new BigDecimal(0);
                     BigDecimal energForVaporate = new BigDecimal(0);
                     BigDecimal energCedida_f = new BigDecimal(0);
-                    BigDecimal energCedida_v = new BigDecimal(0);
                     BigDecimal mid = new BigDecimal(0);
                     
                     energForFusion = m.multiply(cs.multiply(tempF.subtract(tempIni))).add(m.multiply(clf)); //valor positivo
                     energForVaporate = m.multiply(cl.multiply(tempV.subtract(tempF))).add(m.multiply(clv)); //valor positivo
                     
                     energCedida_f = qtEnergiaCedida(listNoFaseChange,tempF); //verificar se esse valor é + ou - 
-                    energCedida_v = qtEnergiaCedida(listNoFaseChange,tempV);
                     mid = energForFusion.add(energCedida_f);//se maior que 0 muda de fase, se menor, nao muda
                     
                     if(mid.doubleValue()==0){
@@ -392,15 +390,19 @@ public class ProcessEquilibrioTermico {
                         co2 = co2.add(m.multiply(cl));//adicionando fase liquida
                         
                         //iniciando alanise da vaporizacao
-                        mid = energForVaporate.add(energCedida_v);
+                        mid = energForVaporate.add(mid);
                         
-                        if(mid.doubleValue()<=0){   
+                        if(mid.doubleValue()==0){   
                             //teve energia suficiente para passar da vaporizacao
                           
                             f = f.add(m.multiply(clv));//adicionando mudanca de fase a equacao geral
+                            
+                        }else if(mid.doubleValue()<0){
+                            
+                            f = f.add(m.multiply(clv));//adicionando mudanca de fase a equacao geral
                             co1 = co1.add(m.multiply(cv.multiply(tempV)));//adicionando fase gasosa
                             co2 = co2.add(m.multiply(cv));//adicionando fase gasosa
-                        
+                            
                         }   
                     
                     }else{
@@ -414,11 +416,10 @@ public class ProcessEquilibrioTermico {
                     
                     throw new Exception("intervalo indeterminado por temperatura");
                                         
-                }else if(p.equals("antV")){
-                    
-                    
-                    //falta aquiiiii
-                    
+                }else if(p.equals("antV")){ 
+                
+                
+                
                 }else if(p.equals("onV")){
                     
                     throw new Exception("intervalo indeterminado por temperatura");
@@ -427,15 +428,13 @@ public class ProcessEquilibrioTermico {
                     
                     BigDecimal energForSolid = new BigDecimal(0);
                     BigDecimal energForLiquid = new BigDecimal(0);
-                    BigDecimal energCedida_f = new BigDecimal(0);
                     BigDecimal energCedida_v = new BigDecimal(0);
                     BigDecimal mid = new BigDecimal(0);
                     
                     energForLiquid = m.multiply(cv.multiply(tempV.subtract(tempIni))).add(m.multiply(clvn)); //valor negativo
                     energForSolid = m.multiply(cl.multiply(tempF.subtract(tempV))).add(m.multiply(clfn)); //valor negativo
                     
-                    energCedida_v = qtEnergiaCedida(listNoFaseChange,tempV); 
-                    energCedida_f = qtEnergiaCedida(listNoFaseChange,tempF);
+                    energCedida_v = qtEnergiaCedida(listNoFaseChange,tempV);
                     
                     if(energCedida_v.doubleValue()>0){
                         //a agua pode mudar de fase
@@ -455,23 +454,18 @@ public class ProcessEquilibrioTermico {
                             f = f.add(m.multiply(clvn));//adicionando mudanca de fase a equacao geral
                             
                             co1 = co1.add(m.multiply(cl.multiply(tempV)));//adicionando fase liquida
-                            co2 = co2.add(m.multiply(cl));//adicionando fase liquida
+                            co2 = co2.add(m.multiply(cl));//adicionando fase liquida   
                             
-                            if(energCedida_f.doubleValue()>0){
-                                //continua mudando de fase
+                            mid = mid.add(energForSolid);
                                 
-                                mid = energCedida_f.add(energForSolid);
-                                
-                                if(mid.doubleValue()==0){
-                                    f = f.add(m.multiply(clfn));//adicionando mudanca de fase a equacao geral
-                                }else if(mid.doubleValue()>0){
-                                    co1 = co1.add(m.multiply(cs.multiply(tempF)));//adicionando fase solida
-                                    co2 = co2.add(m.multiply(cs));//adicionando fase solida
-                                    f = f.add(m.multiply(clfn));//adicionando mudanca de fase a equacao geral
-                                }
-                           
+                            if(mid.doubleValue()==0){
+                                f = f.add(m.multiply(clfn));//adicionando mudanca de fase a equacao geral
+                            }else if(mid.doubleValue()>0){
+                                co1 = co1.add(m.multiply(cs.multiply(tempF)));//adicionando fase solida
+                                co2 = co2.add(m.multiply(cs));//adicionando fase solida
+                                f = f.add(m.multiply(clfn));//adicionando mudanca de fase a equacao geral
                             }
-                            
+                           
                         }else{
                             co1 = co1.add(m.multiply(cv.multiply(tempIni)));//adicionando fase gasosa
                             co2 = co2.add(m.multiply(cv));//adicionando fase gasosa
@@ -519,6 +513,14 @@ public class ProcessEquilibrioTermico {
         }
         
         return energ;
+    }
+    
+    private String aproxSentido(List<eqNoFaseChange> elements, Double tempComparativa){
+        
+        
+        
+        return null;
+        
     }
     
 }

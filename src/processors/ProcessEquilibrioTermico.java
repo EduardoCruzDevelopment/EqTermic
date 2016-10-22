@@ -418,8 +418,23 @@ public class ProcessEquilibrioTermico {
                                         
                 }else if(p.equals("antV")){ 
                 
+                    String sentido = aproxSentido(listNoFaseChange, tempIni.doubleValue());
                 
-                
+                    if(sentido != null){
+                        
+                        if(sentido.equals("+")){
+                            
+                            
+                            
+                        }else if(sentido.equals("0")){
+                            
+                        }else if(sentido.equals("-")){
+                            
+                        }
+                        
+                    }else{
+                        throw new Exception("sentido inexistente");
+                    }
                 }else if(p.equals("onV")){
                     
                     throw new Exception("intervalo indeterminado por temperatura");
@@ -517,9 +532,43 @@ public class ProcessEquilibrioTermico {
     
     private String aproxSentido(List<eqNoFaseChange> elements, Double tempComparativa){
         
+        Double vMaior = 0.d;
+        eqNoFaseChange eqMaior = null;
         
+        for (eqNoFaseChange eq : elements) {
+            
+            Double v = (eq.m.multiply(eq.c.multiply(eq.tempIni))).doubleValue();
+            
+            if(v >= vMaior){
+                vMaior = v;
+                eqMaior = eq;
+            }
+            
+        }
         
-        return null;
+        if(eqMaior != null){
+            
+            if(eqMaior.tempIni.doubleValue() > tempComparativa){
+            
+                return "+";
+                
+            }else if(eqMaior.tempIni.doubleValue() == tempComparativa){
+                
+                return "0";
+            
+            }else if(eqMaior.tempIni.doubleValue() < tempComparativa){
+                
+                return "-";
+            
+            }else{
+                
+                return null;
+            
+            }
+            
+        }else{
+            return null;
+        }
         
     }
     

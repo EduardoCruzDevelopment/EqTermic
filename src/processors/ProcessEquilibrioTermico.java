@@ -424,11 +424,66 @@ public class ProcessEquilibrioTermico {
                         
                         if(sentido.equals("+")){
                             
+                            BigDecimal energForVaporate = new BigDecimal(0);
+                            BigDecimal energCedida_v = new BigDecimal(0);
+                            BigDecimal mid = new BigDecimal(0);
                             
+                            energForVaporate = m.multiply(cl.multiply(tempV.subtract(tempIni))).add(m.multiply(clv));
+                            energCedida_v = qtEnergiaCedida(listNoFaseChange,tempV);
+                            
+                            mid = energForVaporate.add(energCedida_v);
+                            
+                            co1 = co1.add(m.multiply(cl.multiply(tempIni)));
+                            co2 = co2.add(m.multiply(cl));
+                            
+                            if(mid.doubleValue()<0){
+                                
+                                f = f.add(m.multiply(clv));
+                                co1 = co1.add(m.multiply(cv.multiply(tempV)));
+                                co2 = co2.add(m.multiply(cv));
+                                
+                            }else if(mid.doubleValue() == 0){
+                                
+                                f = f.add(m.multiply(clv));
+                                
+                            }else if(mid.doubleValue() > 0){
+                                
+                                //nao faz nada
+                                
+                            }
                             
                         }else if(sentido.equals("0")){
                             
+                            throw new Exception ("situacao nao tratada");
+                            //situacao nao tratada
+                        
                         }else if(sentido.equals("-")){
+                            
+                            BigDecimal energForSolid = new BigDecimal(0);
+                            BigDecimal energCedida_f = new BigDecimal(0);
+                            BigDecimal mid = new BigDecimal(0);
+                            
+                            energForSolid = m.multiply(cl.multiply(tempF.subtract(tempIni))).add(m.multiply(clfn));
+                            energCedida_f = qtEnergiaCedida(listNoFaseChange,tempF);
+                            
+                            mid = energForSolid.add(energCedida_f);
+                            
+                            co1 = co1.add(m.multiply(cl.multiply(tempIni)));
+                            co2 = co2.add(m.multiply(cl));
+                            
+                            if(mid.doubleValue()>0){
+                                
+                                f = f.add(m.multiply(clfn));
+                                co1 = co1.add(m.multiply(cs.multiply(tempF)));
+                                co2 = co2.add(m.multiply(cs));
+                                
+                            }else if(mid.doubleValue() == 0){
+                                
+                                f = f.add(m.multiply(clfn));
+                                
+                            }else if(mid.doubleValue() < 0){
+                                //nao faz nada
+                            }
                             
                         }
                         

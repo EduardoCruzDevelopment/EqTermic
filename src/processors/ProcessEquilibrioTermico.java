@@ -552,8 +552,16 @@ public class ProcessEquilibrioTermico {
                 }
                 
                 //fim do estudo de fases
+            
+                for (eqNoFaseChange eqs : listNoFaseChange) {
+                
+                    co1 = co1.add(eqs.m.multiply(eqs.c.multiply(eqs.tempIni)));
+                    co2 = co2.add(eqs.m.multiply(eqs.c));
 
-                return null;
+                }
+            
+                System.out.println("Retornando resultado...\n\n");
+                return (co1.subtract(f)).divide(co2, precision, RoundingMode.UP);
                 
             }
         }

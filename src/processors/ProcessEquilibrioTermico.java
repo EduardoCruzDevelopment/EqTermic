@@ -103,81 +103,6 @@ public class ProcessEquilibrioTermico {
         
     }
     
-    private BigDecimal qtEnergToChangeFase(ItensEquilibrioTermico ie) throws Exception{
-        
-        System.out.println("Analisando quantidade de energia necessaria para mudar para a fase mais proxima.\n");
-        
-        String p = position(ie.getTempIni(),ie.getElemento().getTempF(),ie.getElemento().getTempV());
-        
-        System.out.println("Posição: "+p);
-        
-        BigDecimal m = new BigDecimal(ie.getMassa()),
-                   cs = new BigDecimal(ie.getElemento().getcSolido()),
-                   cl = new BigDecimal(ie.getElemento().getcLiquido()),
-                   cg = new BigDecimal(ie.getElemento().getcGasoso()),
-                   clf = new BigDecimal(ie.getElemento().getlFusao()),
-                   clv = new BigDecimal(ie.getElemento().getlVapor()),
-                   clfn = new BigDecimal(ie.getElemento().getlFusao()*-1),
-                   clvn = new BigDecimal(ie.getElemento().getlVapor()*-1);
-        
-        if(p.equals("antF")){
-            
-            BigDecimal dt = new BigDecimal(ie.getElemento().getTempF()-ie.getTempIni());
-            return (m.multiply(cs.multiply(dt)));//.add(clf.multiply(m));
-            
-        }else if(p.equals("onF")){
-            
-            return null;//clf.multiply(m);
-            
-        }else if(p.equals("antV")){
-            
-            System.out.println("Analise por média");
-            
-            Double med = (ie.getElemento().getTempF()+ie.getElemento().getTempV())/2;
-            
-            System.out.println("Média: "+med);
-            System.out.println("Temperatura inicial relacionada a média:");
-            
-            if(ie.getTempIni() < med){
-                System.out.println("Menor");
-                
-                BigDecimal dt = new BigDecimal(ie.getElemento().getTempF()-ie.getTempIni());
-                return (m.multiply(cl.multiply(dt)));//.add(m.multiply(clfn)); 
-                
-            }else if(ie.getTempIni().equals(med)){
-                
-                System.out.println("Igual");
-                
-                BigDecimal dt = new BigDecimal(ie.getElemento().getTempF()-ie.getTempIni()); 
-                return (m.multiply(cl.multiply(dt)));//.add(m.multiply(clvn));
-                
-            }else if(ie.getTempIni() > med){
-                System.out.println("Maior");
-                
-                BigDecimal dt = new BigDecimal(ie.getElemento().getTempV()-ie.getTempIni());
-                return (m.multiply(cl.multiply(dt)));//.add(m.multiply(clv));
-                
-            }else{
-                System.out.println("Erro");
-                throw new Exception("Valores informados incorretamente!");
-            }
-            
-        }else if(p.equals("onV")){
-            
-            return m.multiply(clv);
-            
-        }else if(p.equals("postV")){
-            
-            BigDecimal dt = new BigDecimal(ie.getElemento().getTempV()-ie.getTempIni());
-            
-            return (m.multiply(cg.multiply(dt)));//.add(m.multiply(clvn));
-            
-        }else{
-            throw new Exception("Valores informados incorretamente!");
-        }
-        
-    }
-    
     public BigDecimal calc(List<ItensEquilibrioTermico> corpo) throws Exception{
         
         System.out.println("Iniciando calculo geral...");
@@ -271,8 +196,8 @@ public class ProcessEquilibrioTermico {
                     System.out.println("Elemento adicionado a lista\n\n");
                     
                 }else if(pIni.equals("onF")){
-                    System.out.println("Erro --- Elemento em mufança de fase");
-                    throw new Exception("material diferente de agua com mudanca de fase");
+                    System.err.println("Erro --- Elemento em mufança de fase");
+                    throw new Exception("elemento em mudanca de fase");
                     
                 }else if(pIni.equals("antV")){
                     System.out.println("fase liquida");
@@ -283,8 +208,8 @@ public class ProcessEquilibrioTermico {
                     listNoFaseChange.add(eq);
                     System.out.println("Elemento adicionado a lista\n\n");
                 }else if(pIni.equals("onV")){
-                    System.out.println("Erro --- Elemento em mudança de fase");
-                    throw new Exception("material diferente de agua com mudanca de fase");
+                    System.err.println("Erro --- Elemento em mudança de fase");
+                    throw new Exception("elemento em mudanca de fase");
                 
                 }else if(pIni.equals("postV")){
                     System.out.println("fase gasosa");
@@ -296,7 +221,7 @@ public class ProcessEquilibrioTermico {
                     System.out.println("Elemento adicionado a lista\n\n");
                 }else{
                     
-                    System.out.println("Erro de classifcacao");
+                    System.err.println("Erro de classifcacao");
                     throw new Exception("erro geral formacao de equacao diferente de agua");
                     
                 }
@@ -317,9 +242,8 @@ public class ProcessEquilibrioTermico {
         //equacao principal
         
         if(listComFaseChange.isEmpty()){ 
-            System.out.println("Nao detectado a existencia de agua no sistema...");
+            System.out.println("Nao detectada a existencia de agua no sistema...");
             
-            System.out.println("Executando calculo de apenas duas equacoes");
             for (eqNoFaseChange eq : listNoFaseChange) {
                 
                 co1 = co1.add(eq.m.multiply(eq.c.multiply(eq.tempIni)));
@@ -337,11 +261,12 @@ public class ProcessEquilibrioTermico {
             if(listComFaseChange.size()>1){
                 //selecionar agua com menor temperatura, e definir minimos para definir a qt de energina total cedida
                 System.out.println("Mais de uma agua identficada");
-                throw new Exception("Exemplo nao tratado ainda");
+                throw new Exception("mais de uma agua identificada");
 
             }else{
                 
-                eqComFaseChange eq = listComFaseChange.get(1);
+                System.out.println("Apenas uma agua identificada no sistema");
+                eqComFaseChange eq = listComFaseChange.get(0);
                 Elemento e = eq.e;
                 BigDecimal tempIni = eq.tempIni;
                 BigDecimal m = eq.m;
@@ -359,8 +284,11 @@ public class ProcessEquilibrioTermico {
                 
                 //estudo de fases...
                 
+                System.out.println("Iniciando estudo de fases");
 
                 if(p.equals("antF")){
+                    
+                    System.out.println("Posicao inicia --- antF");
                     
                     BigDecimal energForFusion = new BigDecimal(0);
                     BigDecimal energForVaporate = new BigDecimal(0);
@@ -375,13 +303,14 @@ public class ProcessEquilibrioTermico {
                     
                     if(mid.doubleValue()==0){
                         //tem energia para passar da mudanca de fase
-                        
+                        System.out.println("Energia suficiente para mudar de fase --- fusao");
                         co1 = co1.add(m.multiply(cs.multiply(tempIni)));
                         co2 = co2.add(m.multiply(cs));
                         f = f.add(m.multiply(clf));//adicionando mudanca de fase a equacao geral
                          
                     }else if(mid.doubleValue()<=0){
-                    
+                        
+                        System.out.println("Energia suficiente para passar da mudanca de fase --- fusao");
                         co1 = co1.add(m.multiply(cs.multiply(tempIni)));//adicionando fase solida
                         co2 = co2.add(m.multiply(cs));//adicionando fase solida
                         f = f.add(m.multiply(clf));//adicionando mudanca de fase a equacao geral
@@ -394,19 +323,23 @@ public class ProcessEquilibrioTermico {
                         
                         if(mid.doubleValue()==0){   
                             //teve energia suficiente para passar da vaporizacao
-                          
+                            System.out.println("Energia suficiente para mundar de fase --- vaporizacao");
                             f = f.add(m.multiply(clv));//adicionando mudanca de fase a equacao geral
                             
                         }else if(mid.doubleValue()<0){
                             
+                            System.out.println("Energia suficiente para passar da mudanca de fase --- vaporizacao");
                             f = f.add(m.multiply(clv));//adicionando mudanca de fase a equacao geral
                             co1 = co1.add(m.multiply(cv.multiply(tempV)));//adicionando fase gasosa
                             co2 = co2.add(m.multiply(cv));//adicionando fase gasosa
                             
+                        }else{
+                            System.out.println("Energia insuficiente para passar da mudanca de fase --- vaporizacao");
                         }   
                     
                     }else{
                         
+                        System.out.println("Energia insuficiente para passar da mudanca de fase --- fusao");
                         co1 = co1.add(m.multiply(cs.multiply(tempIni)));
                         co2 = co2.add(m.multiply(cs));
                         
@@ -414,15 +347,21 @@ public class ProcessEquilibrioTermico {
                     
                 }else if(p.equals("onF")){
                     
-                    throw new Exception("intervalo indeterminado por temperatura");
+                    throw new Exception("elemento em mudanca de fase");
                                         
                 }else if(p.equals("antV")){ 
                 
+                    System.out.println("Posicao antV identificado, possibilidade de ambiguidade de direcao");
+                    System.out.println("Iniciando metodo APROX");
+                    
                     String sentido = aproxSentido(listNoFaseChange, tempIni.doubleValue());
                 
+                    
                     if(sentido != null){
                         
                         if(sentido.equals("+")){
+                            
+                            System.out.println("Aproximacao para sentido positivo");
                             
                             BigDecimal energForVaporate = new BigDecimal(0);
                             BigDecimal energCedida_v = new BigDecimal(0);
@@ -437,28 +376,28 @@ public class ProcessEquilibrioTermico {
                             co2 = co2.add(m.multiply(cl));
                             
                             if(mid.doubleValue()<0){
-                                
+                                System.out.println("Energia suficiente para passar da mudanca de fase --- vaporizacao");
                                 f = f.add(m.multiply(clv));
                                 co1 = co1.add(m.multiply(cv.multiply(tempV)));
                                 co2 = co2.add(m.multiply(cv));
                                 
                             }else if(mid.doubleValue() == 0){
-                                
+                                System.out.println("Energia suficiente para mudar de fase --- vaporizacao");
                                 f = f.add(m.multiply(clv));
                                 
                             }else if(mid.doubleValue() > 0){
-                                
+                                System.out.println("Energia insuficiente para mudar de fase --- vaporizacao");
                                 //nao faz nada
                                 
                             }
                             
                         }else if(sentido.equals("0")){
-                            
+                            System.err.println("Sentido nulo!");
                             throw new Exception ("situacao nao tratada");
                             //situacao nao tratada
                         
                         }else if(sentido.equals("-")){
-                            
+                            System.out.println("Aproximacao para sentido negativo");
                             BigDecimal energForSolid = new BigDecimal(0);
                             BigDecimal energCedida_f = new BigDecimal(0);
                             BigDecimal mid = new BigDecimal(0);
@@ -472,30 +411,33 @@ public class ProcessEquilibrioTermico {
                             co2 = co2.add(m.multiply(cl));
                             
                             if(mid.doubleValue()>0){
-                                
+                                System.out.println("Energia suficiente para passar da mudanca de fase --- fusao");
                                 f = f.add(m.multiply(clfn));
                                 co1 = co1.add(m.multiply(cs.multiply(tempF)));
                                 co2 = co2.add(m.multiply(cs));
                                 
                             }else if(mid.doubleValue() == 0){
-                                
+                                System.out.println("Energia suficiente para chegar a mudanca de fase --- fusao");
                                 f = f.add(m.multiply(clfn));
                                 
                             }else if(mid.doubleValue() < 0){
+                                System.out.println("Energia insuficiente para chegar a mudaca de fase --- fusao");
                                 //nao faz nada
                             }
                             
                         }
                         
                     }else{
+                        System.err.println("sentido inexistente");
                         throw new Exception("sentido inexistente");
                     }
                 }else if(p.equals("onV")){
                     
-                    throw new Exception("intervalo indeterminado por temperatura");
+                    throw new Exception("elemento em mudanca de fase");
                     
                 }else if(p.equals("postV")){
                     
+                    System.out.println("Posicao inicia --- postV");
                     BigDecimal energForSolid = new BigDecimal(0);
                     BigDecimal energForLiquid = new BigDecimal(0);
                     BigDecimal energCedida_v = new BigDecimal(0);
@@ -508,17 +450,17 @@ public class ProcessEquilibrioTermico {
                     
                     if(energCedida_v.doubleValue()>0){
                         //a agua pode mudar de fase
-                        
+                        System.out.println("Identificada a possibilidade de existir mudancas de fase");
                         mid = energCedida_v.add(energForLiquid);
                         
                         if(mid.doubleValue()==0){
-                            
+                            System.out.println("Energia suficiente para chegar a mudanca de fase --- vaporizacao");
                             co1 = co1.add(m.multiply(cv.multiply(tempIni)));//adicionando fase gasosa
                             co2 = co2.add(m.multiply(cv));//adicionando fase gasosa
                             f = f.add(m.multiply(clvn));//adicionando mudanca de fase a equacao geral
                             
                         }else if(mid.doubleValue()>0){
-                            
+                            System.out.println("Energia suficiente para passar da mudanca de fase --- vaporizacao");
                             co1 = co1.add(m.multiply(cv.multiply(tempIni)));//adicionando fase gasosa
                             co2 = co2.add(m.multiply(cv));//adicionando fase gasosa
                             f = f.add(m.multiply(clvn));//adicionando mudanca de fase a equacao geral
@@ -529,20 +471,24 @@ public class ProcessEquilibrioTermico {
                             mid = mid.add(energForSolid);
                                 
                             if(mid.doubleValue()==0){
+                                System.out.println("Energia suficiente para mudar de fase --- fusao");
                                 f = f.add(m.multiply(clfn));//adicionando mudanca de fase a equacao geral
                             }else if(mid.doubleValue()>0){
+                                System.out.println("Energia suficiente para passar da mudanca de fase --- fusao");
                                 co1 = co1.add(m.multiply(cs.multiply(tempF)));//adicionando fase solida
                                 co2 = co2.add(m.multiply(cs));//adicionando fase solida
                                 f = f.add(m.multiply(clfn));//adicionando mudanca de fase a equacao geral
                             }
                            
                         }else{
+                            System.out.println("Energia insuficiente para mudar de fase --- vaporizacao");
                             co1 = co1.add(m.multiply(cv.multiply(tempIni)));//adicionando fase gasosa
                             co2 = co2.add(m.multiply(cv));//adicionando fase gasosa
                         }
  
                     }else{
                         //a agua nao pode mudar de fase
+                        System.out.println("Detectada a impossibilidade de mudanca de fase");
                         co1 = co1.add(m.multiply(cv.multiply(tempIni)));//adicionando fase gasosa
                         co2 = co2.add(m.multiply(cv));//adicionando fase gasosa
                     }

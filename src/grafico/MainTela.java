@@ -938,7 +938,23 @@ public class MainTela extends javax.swing.JFrame {
                 sr.setVisible(true);
                 etClear("full");
             }catch(Exception e){
+                
                 System.err.println(e.getMessage());
+                
+                if(e.getMessage().equals("mais de uma agua identificada")){
+                    
+                    JOptionPane.showMessageDialog(null, "Erro! Mais de uma Água identificada no sistema!","InternalSystem", JOptionPane.ERROR_MESSAGE);
+                
+                }else if(e.getMessage().equals("elemento em mudanca de fase")){
+                    
+                    JOptionPane.showMessageDialog(null, "Erro! Foram detectados elementos em temperatura de mudança de fase!","InternalSystem", JOptionPane.ERROR_MESSAGE);
+                
+                }else{
+                    
+                    JOptionPane.showMessageDialog(null, "Ocorreu um erro inesperado! Cotate o desenvolvedor.\nCódigo de erro: "+e.getMessage(),"InternalSystem", JOptionPane.ERROR_MESSAGE);
+                    
+                }
+                
             }
             
         }else{

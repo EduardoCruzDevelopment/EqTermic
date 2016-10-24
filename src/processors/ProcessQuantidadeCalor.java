@@ -91,7 +91,7 @@ public class ProcessQuantidadeCalor {
                         BigDecimal cs = new BigDecimal(iqc.getElemento().getcSolido()),
                                 cl = new BigDecimal(iqc.getElemento().getcLiquido()),
                                 dts = new BigDecimal(iqc.getElemento().getTempF() - iqc.getTempInicial()),
-                                dtl = new BigDecimal(iqc.getTempFinal() - iqc.getTempInicial()),
+                                dtl = new BigDecimal(iqc.getTempFinal() - iqc.getElemento().getTempF()),
                                 clf = new BigDecimal(iqc.getElemento().getlFusao());
 
                         result = result.add((m.multiply(cs.multiply(dts))) //solido

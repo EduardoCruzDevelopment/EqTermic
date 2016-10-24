@@ -1,10 +1,10 @@
 ----------------------------------------------------------------
-Sun Oct 23 15:46:33 BRST 2016:
- Inicializando o Derby versão The Apache Software Foundation - Apache Derby - 10.8.2.2 - (1181258): instância a816c00e-0157-f2a6-b2f7-0000064c2c20
-no diretório de banco de dados C:\Users\Atrox\Documents\EqTermic\data  
+Mon Oct 24 15:32:34 BRST 2016:
+ Inicializando o Derby versão The Apache Software Foundation - Apache Derby - 10.8.2.2 - (1181258): instância a816c00e-0157-f7c0-40f7-000002e6f7c0
+no diretório de banco de dados C:\Users\Atrox_Portable\Documents\EqTermic\data  
 
 java.vendor=Oracle Corporation
 java.runtime.version=1.7.0_25-b17
-user.dir=C:\Users\Atrox\Documents\EqTermic
+user.dir=C:\Users\Atrox_Portable\Documents\EqTermic
 derby.system.home=null
 Carregador de classe do banco de dados iniciado - derby.database.classpath=''

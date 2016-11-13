@@ -252,7 +252,7 @@ public class ProcessEquilibrioTermico {
             }
             
             System.out.println("Retornando resultado...\n\n");
-            return co1.divide(co2, precision, RoundingMode.UP);
+            return co1.divide(co2, precision, RoundingMode.HALF_EVEN);
             
         }else{
            
@@ -507,7 +507,7 @@ public class ProcessEquilibrioTermico {
                 }
             
                 System.out.println("Retornando resultado...\n\n");
-                return (co1.subtract(f)).divide(co2, precision, RoundingMode.UP);
+                return (co1.subtract(f)).divide(co2, precision, RoundingMode.HALF_EVEN);
                 
             }
         }
